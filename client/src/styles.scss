@@ -1,0 +1,78 @@
+$yellow: #f9df6d;
+$green: #a0c35a;
+$blue: #b0c4ef;
+$puple: #ba81c5;
+$tileBackground: #efefe6;
+
+@mixin roboto-serif($uniquifier, $weight) {
+
+    @if $weight < 100 or $weight > 900 {
+        @warn "Weight should be between 100 and 900. Defaulting to 400.";
+        $weight: 400;
+    }
+
+    .roboto-serif-#{$uniquifier} {
+        font-family: "Roboto Serif", serif;
+        font-optical-sizing: auto;
+        font-weight: $weight;
+        font-style: normal;
+        font-variation-settings: "wdth" 87.5, "GRAD" 0;
+    }
+}  
+
+@mixin open-sans($uniquifier, $weight) {
+    @if $weight < 300 or $weight > 800 {
+        @warn "Weight should be between 300 and 800. Defaulting to 400.";
+        $weight: 400;
+    }
+
+    .open-sans-#{$uniquifier} {
+        font-family: "Open Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: $weight;
+        font-style: normal;
+        font-variation-settings: "wdth" 100;
+    }
+}
+  
+@mixin font-size($size) {
+    @if $size < 8 or $size > 40 {
+        @warn "Font size should be between 8 and 32. Defaulting to 16px.";
+        $size: 16;
+    }
+
+    .font-size-#{$size} {
+        font-size: #{$size}px;
+    }
+
+    .font-size-md-#{$size} {
+        font-size: #{$size}px;
+        @media (max-width: 768px) {
+            font-size: #{$size * 0.75}px;
+        }
+    }
+
+    .font-size-sm-#{$size} {
+        font-size: #{$size}px;
+        @media (max-width: 576px) {
+            font-size: #{$size * 0.5}px;
+        }
+    }
+
+    .font-size-md-sm-#{$size} {
+        font-size: #{$size}px;
+        @media (max-width: 768px) {
+            font-size: #{$size * 0.75}px;
+        }
+        @media (max-width: 576px) {
+            font-size: #{$size * 0.5}px;
+        }
+    }
+
+}
+
+@for $i from 8 through 40 {
+    @include font-size($i);
+  }
+
+@import 'bootstrap/scss/bootstrap';

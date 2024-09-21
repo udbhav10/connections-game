@@ -1,0 +1,14 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Angular
+client/dist/
+client/.angular/
+client/node_modules/
+client/package-lock.json
+client/yarn.lock
+
+# Environment files
+.env
