@@ -1,8 +1,9 @@
 $yellow: #f9df6d;
 $green: #a0c35a;
 $blue: #b0c4ef;
-$puple: #ba81c5;
+$purple: #ba81c5;
 $tileBackground: #efefe6;
+$selectedTileBackground: #5a594e;
 
 @mixin roboto-serif($uniquifier, $weight) {
 
@@ -42,30 +43,30 @@ $tileBackground: #efefe6;
     }
 
     .font-size-#{$size} {
-        font-size: #{$size}px;
+        font-size: #{$size}px !important;
     }
 
     .font-size-md-#{$size} {
-        font-size: #{$size}px;
+        font-size: #{$size}px !important;
         @media (max-width: 768px) {
-            font-size: #{$size * 0.75}px;
+            font-size: #{$size * 0.75}px !important;
         }
     }
 
     .font-size-sm-#{$size} {
-        font-size: #{$size}px;
+        font-size: #{$size}px !important;
         @media (max-width: 576px) {
-            font-size: #{$size * 0.5}px;
+            font-size: #{$size * 0.5}px !important;
         }
     }
 
     .font-size-md-sm-#{$size} {
-        font-size: #{$size}px;
+        font-size: #{$size}px !important;
         @media (max-width: 768px) {
-            font-size: #{$size * 0.75}px;
+            font-size: #{$size * 0.75}px !important;
         }
         @media (max-width: 576px) {
-            font-size: #{$size * 0.5}px;
+            font-size: #{$size * 0.5}px !important;
         }
     }
 
@@ -74,5 +75,9 @@ $tileBackground: #efefe6;
 @for $i from 8 through 40 {
     @include font-size($i);
   }
+
+.cursor-pointer {
+    cursor: pointer;
+}
 
 @import 'bootstrap/scss/bootstrap';

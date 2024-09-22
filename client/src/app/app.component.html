@@ -23,88 +23,73 @@
   </div>
 
   <!-- Message -->
-  <div id="message" class="d-flex align-items-center justify-content-center py-md-4 py-3">
+  <div id="message" class="d-flex align-items-center justify-content-center py-3">
     <span class="open-sans-body font-size-md-16">{{ message }}</span>
   </div>
 
   <!-- Game -->
-   <div id="game" class="d-flex justify-content-center">
+  <div id="game" class="d-flex justify-content-center">
     <div class="game-grid">
-      <div class="row">
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[0])">{{words[0] | uppercase}}</span>
+      <ng-container *ngFor="let row of groupsFound">
+        <div class="row">
+          <div class="col d-flex flex-column m-1 py-4 justify-content-center align-items-center text-center revealedGroup" [ngClass]="row['class']">
+            <div class="font-size-md-sm-20 open-sans-header">
+              {{ row['category'] | uppercase }}
+            </div>
+            <div class="font-size-md-sm-16 open-sans-body">
+              <div>
+                <ng-container *ngFor="let id of row['answers']; let i = index">
+                  {{ words[id] | uppercase }}<span *ngIf="i < row['answers'].length - 1">, </span>
+                </ng-container>
+              </div>
+            </div>
+          </div>
         </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[1])">{{words[1] | uppercase}}</span>
+      </ng-container>
+      <ng-container *ngFor="let row of order; let i = index">
+        <div class="row">
+          <ng-container *ngFor="let item of row; let j = index">
+            <div
+              [id]="'word' + item" 
+              class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-4 px-1"
+              (click)="toggleSelection(item)"
+              [ngClass]="[
+                          selectedWords.length == 4 ? '' : 'cursor-pointer',
+                          selectedWords.includes(item) ? 'selectedWordTile' : ''
+                          ]">
+              <span 
+                class="open-sans-header" 
+                [ngClass]="adjustFontSizeAndWidth(words[item])">
+
+                {{words[item] | uppercase}}
+
+              </span>
+            </div>
+          </ng-container>
         </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[2])">{{words[2] | uppercase}}</span>
-        </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[3])">{{words[3] | uppercase}}</span>
-        </div>
-      </div>
-      <div class="row">
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[4])">{{words[4] | uppercase}}</span>
-        </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[5])">{{words[5] | uppercase}}</span>
-        </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[6])">{{words[6] | uppercase}}</span>
-        </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[7])">{{words[7] | uppercase}}</span>
-        </div>
-      </div>
-      <div class="row">
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[8])">{{words[8] | uppercase}}</span>
-        </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[9])">{{words[9] | uppercase}}</span>
-        </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[10])">{{words[10] | uppercase}}</span>
-        </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[11])">{{words[11] | uppercase}}</span>
-        </div>
-      </div>
-      <div class="row">
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[12])">{{words[12] | uppercase}}</span>
-        </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[13])">{{words[13] | uppercase}}</span>
-        </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[14])">{{words[14] | uppercase}}</span>
-        </div>
-        <div 
-          class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-md-4 py-3 px-1">
-          <span class="open-sans-header" [ngClass]="adjustFontSizeAndWidth(words[15])">{{words[15] | uppercase}}</span>
-        </div>
-      </div>
+      </ng-container>
    </div>
+  </div>
+
+  <!-- Mistakes remaining -->
+  <div id="mistakes" class="d-flex justify-content-center py-3">
+    <div class="d-flex align-items-center">
+      <span class="open-sans-body font-size-md-16 me-2">Mistakes remaining: </span>
+      <ng-container *ngFor="let item of mistakesRemaining">
+        <span class="material-symbols-outlined ms-1 font-size-md-20">
+          radio_button_unchecked
+        </span>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div id="buttons"  class="d-flex justify-content-center py-2">
+    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-16" (click)="shuffle()">Shuffle</button>
+    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-16" (click)="deselectAll()" [disabled]="!selectedWords.length">Deselect all</button>
+    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-16" (click)="submit()" [disabled]="selectedWords.length!==4">Submit</button>
+  </div>
 
 </div>
-
 
 <router-outlet />

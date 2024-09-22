@@ -13,8 +13,67 @@
 .wordTile {
     background-color: $tileBackground;
     border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.revealedGroup {
+    border-radius: 10px;
+}
+
+.yellow {
+    background-color: $yellow;
+}
+
+.green {
+    background-color: $green;
+}
+
+.blue {
+    background-color: $blue;
+}
+
+.purple {
+    background-color: $purple;
+}
+
+.selectedWordTile {
+    background-color: $selectedTileBackground;
+    color: white;
 }
 
 .font-variation-width-85 {
     font-variation-settings: "wdth" 85;
 }
+
+.game-buttons {
+    border-radius: 25px;
+}
+
+.btn-md-lg {
+    padding: 0.75rem 1.25rem;
+    @media (max-width: 768px) {
+        padding: 0.5rem 1rem;
+    }
+    @media (max-width: 576px) {
+        padding: 0.25rem 0.75rem;
+    }
+}
+
+@keyframes bounce {
+    0% {
+      transform: translateY(0);
+    }
+    33% {
+      transform: translateY(-10px);
+    }
+    66% {
+      transform: translateY(10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+.bounce {
+    animation: bounce 0.65s ease;
+}   
