@@ -52,12 +52,9 @@
 }
 
 .btn-md-lg {
-    padding: 0.75rem 1.25rem;
+    padding: 0.65rem 1.15rem;
     @media (max-width: 768px) {
         padding: 0.5rem 1rem;
-    }
-    @media (max-width: 576px) {
-        padding: 0.25rem 0.75rem;
     }
 }
 
