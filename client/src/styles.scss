@@ -56,7 +56,7 @@ $selectedTileBackground: #5a594e;
     .font-size-sm-#{$size} {
         font-size: #{$size}px !important;
         @media (max-width: 576px) {
-            font-size: #{$size * 0.5}px !important;
+            font-size: #{$size * 0.65}px !important;
         }
     }
 
@@ -66,7 +66,7 @@ $selectedTileBackground: #5a594e;
             font-size: #{$size * 0.75}px !important;
         }
         @media (max-width: 576px) {
-            font-size: #{$size * 0.5}px !important;
+            font-size: #{$size * 0.65}px !important;
         }
     }
 

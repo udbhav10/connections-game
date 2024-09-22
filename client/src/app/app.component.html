@@ -7,16 +7,16 @@
       <span *ngIf="!isMobile" class="roboto-serif-body font-size-md-20">{{ date }}</span>
     </div>
     <div class="icons-group d-flex ms-auto">
-      <span class="material-symbols-outlined me-sm-1 font-size-md-24">
+      <span class="material-symbols-outlined me-1 font-size-md-24">
         lightbulb
       </span> 
-      <span class="material-symbols-outlined ms-sm-2 me-sm-1 ms-1 font-size-md-24">
+      <span class="material-symbols-outlined ms-2 me-1 font-size-md-24">
         settings
       </span>
-      <span class="material-symbols-outlined ms-sm-2 me-sm-1 ms-1 font-size-md-24">
+      <span class="material-symbols-outlined ms-2 me-1 font-size-md-24">
         bar_chart
       </span>
-      <span class="material-symbols-outlined ms-sm-2 ms-1 font-size-md-24">
+      <span class="material-symbols-outlined ms-2 font-size-md-24">
         help
       </span>
     </div>
@@ -24,7 +24,7 @@
 
   <!-- Message -->
   <div id="message" class="d-flex align-items-center justify-content-center py-3">
-    <span class="open-sans-body font-size-md-16">{{ message }}</span>
+    <span class="open-sans-body font-size-md-20">{{ message }}</span>
   </div>
 
   <!-- Game -->
@@ -32,7 +32,7 @@
     <div class="game-grid">
       <ng-container *ngFor="let row of groupsFound">
         <div class="row">
-          <div class="col d-flex flex-column m-1 py-4 justify-content-center align-items-center text-center revealedGroup" [ngClass]="row['class']">
+          <div class="col d-flex flex-column m-1 py-3 justify-content-center align-items-center text-center revealedGroup" [ngClass]="row['class']">
             <div class="font-size-md-sm-20 open-sans-header">
               {{ row['category'] | uppercase }}
             </div>
@@ -51,7 +51,7 @@
           <ng-container *ngFor="let item of row; let j = index">
             <div
               [id]="'word' + item" 
-              class="col d-flex justify-content-center align-items-center text-center wordTile m-1 py-4 px-1"
+              class="col d-flex justify-content-center align-items-center text-center wordTile m-1 px-1"
               (click)="toggleSelection(item)"
               [ngClass]="[
                           selectedWords.length == 4 ? '' : 'cursor-pointer',
@@ -74,7 +74,7 @@
   <!-- Mistakes remaining -->
   <div id="mistakes" class="d-flex justify-content-center py-3">
     <div class="d-flex align-items-center">
-      <span class="open-sans-body font-size-md-16 me-2">Mistakes remaining: </span>
+      <span class="open-sans-body font-size-md-20 me-2">Mistakes remaining: </span>
       <ng-container *ngFor="let item of mistakesRemaining">
         <span class="material-symbols-outlined ms-1 font-size-md-20">
           radio_button_unchecked
@@ -85,9 +85,9 @@
 
   <!-- Buttons -->
   <div id="buttons"  class="d-flex justify-content-center py-2">
-    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-16" (click)="shuffle()">Shuffle</button>
-    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-16" (click)="deselectAll()" [disabled]="!selectedWords.length">Deselect all</button>
-    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-16" (click)="submit()" [disabled]="selectedWords.length!==4">Submit</button>
+    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-20" (click)="shuffle()">Shuffle</button>
+    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-20" (click)="deselectAll()" [disabled]="!selectedWords.length">Deselect all</button>
+    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-20" (click)="submit()" [disabled]="selectedWords.length!==4">Submit</button>
   </div>
 
 </div>
