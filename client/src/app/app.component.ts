@@ -208,36 +208,168 @@ export class AppComponent {
     return false;
   }
 
-  shake() {
-
-  }
-
-  bounce(): Promise<void> {
+  shake(): Promise<void> {
     return new Promise((resolve) => {
 
-      const totalDuration = this.selectedWords.length * 100 + 650;
-  
-      for (let i = 0; i < this.selectedWords.length; i++) {
-        const id = this.selectedWords[i];
+      for(let id of this.selectedWords) {
+        const element = document.getElementById(`word${id}`);
+        element?.classList.add('shake');
         setTimeout(() => {
-          const element = document.getElementById(`word${id}`);
-          element?.classList.add('bounce');
-          setTimeout(() => {
-            element?.classList.remove('bounce');
-          }, 650);
-        }, i * 100);
+          element?.classList.remove('shake');
+        }, 400);
       }
   
       setTimeout(() => {
         resolve();
-      }, totalDuration + 50);
+      }, 450);
     });
   }
 
+  bounce(): Promise<void> {
+
+    if(this.mistakesRemaining.length > 0) {
+      return new Promise((resolve) => {
+
+        const totalDuration = this.selectedWords.length * 100 + 650;
+        let idsArray = [];
+        const bounceOrder = this.getAnimationOrder();
+  
+        for (let i = 0; i < this.selectedWords.length; i++) {
+          const bounceIndex = bounceOrder.indexOf(this.selectedWords[i]);
+          idsArray[bounceIndex] = this.selectedWords[i];
+        }
+  
+        idsArray = idsArray.filter((i) => i);
+  
+        for(let i = 0; i < idsArray.length; i++) {
+          const id = idsArray[i];
+          setTimeout(() => {
+            const element = document.getElementById(`word${id}`);
+            element?.classList.add('bounce');
+            setTimeout(() => {
+              element?.classList.remove('bounce');
+            }, 650);
+          }, i * 100);
+        }
+    
+        setTimeout(() => {
+          resolve();
+        }, totalDuration + 50);
+      });
+    } else {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 100)
+      })
+    }
+    
+  }
+
   slide(): Promise<void> {
-    return new Promise((resolve) => {
-      resolve();
-    })
+    const orderFlat = this.order.flat();
+
+    let idsArray = [];
+    let source = [];
+    let destination = orderFlat.slice(0, 4);
+    const slideOrder = this.getAnimationOrder();
+    
+    for (let i = 0; i < this.selectedWords.length; i++) {
+      const slideIndex = slideOrder.indexOf(this.selectedWords[i]);
+      idsArray[slideIndex] = this.selectedWords[i];
+    }
+
+    idsArray = idsArray.filter((i) => i);
+
+    for (let id of idsArray) {
+      if(!orderFlat.slice(0, 4).includes(id)) {
+        source.push(id);
+      } else {
+        destination.splice(destination.indexOf(id), 1)
+      }
+    }
+    
+    const initialPositions = source.map(val => 
+      document.getElementById(`word${val}`)?.getBoundingClientRect()
+    );
+
+    const finalPositions = destination.map(val => 
+      document.getElementById(`word${val}`)?.getBoundingClientRect()
+    );
+
+    if(source.length) {
+      return new Promise((resolve) => {
+        for (let i = 0; i < initialPositions.length; i++) {
+          if (initialPositions[i] && finalPositions[i]) {
+            const element = document.getElementById(`word${source[i]}`);
+            
+            element?.style.setProperty('--initial-x', `${initialPositions[i]?.x}px`);
+            element?.style.setProperty('--initial-y', `${initialPositions[i]?.y}px`);
+            element?.style.setProperty('--final-x', `${(finalPositions[i]?.x ?? 0) - (initialPositions[i]?.x ?? 0)}px`);
+            element?.style.setProperty('--final-y', `${(finalPositions[i]?.y ?? 0) - (initialPositions[i]?.y ?? 0)}px`);
+  
+            element?.classList.add('slide');
+          }
+        }
+  
+        for (let i = 0; i < finalPositions.length; i++) {
+          if (initialPositions[i] && finalPositions[i]) {
+            const element = document.getElementById(`word${destination[i]}`);
+            
+            element?.style.setProperty('--initial-x', `${finalPositions[i]?.x}px`);
+            element?.style.setProperty('--initial-y', `${finalPositions[i]?.y}px`);
+            element?.style.setProperty('--final-x', `${(initialPositions[i]?.x ?? 0) - (finalPositions[i]?.x ?? 0)}px`);
+            element?.style.setProperty('--final-y', `${(initialPositions[i]?.y ?? 0) - (finalPositions[i]?.y ?? 0)}px`);
+  
+            element?.classList.add('slide');
+          }
+        }
+  
+        setTimeout(() => {
+          let newOrder = [];
+          for(let i = 0; i < 4; i++) {
+            let temp = orderFlat[i];
+            let tempIndex = orderFlat.indexOf(idsArray[i]);
+            orderFlat[i] = idsArray[i];
+            orderFlat[tempIndex] = temp;
+          }
+          while (orderFlat.length) {
+            newOrder.push(orderFlat.splice(0, 4));
+          }
+          this.order = newOrder;
+          resolve();
+        }, 750);
+      });
+    } else {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 500)
+      })
+    }
+  }
+
+  getAnimationOrder() {
+    let animationOrder: Array<number> = [];
+    const orderFlat = this.order.flat();
+    const length = orderFlat.length;
+
+    for (let i = 0; i < length; i += 4) {
+        animationOrder.push(orderFlat[i]);
+    }
+    
+    for (let i = 1; i < length; i += 4) {
+        animationOrder.push(orderFlat[i]);
+    }
+    
+    for (let i = 2; i < length; i += 4) {
+        animationOrder.push(orderFlat[i]);
+    }
+    
+    for (let i = 3; i < length; i += 4) {
+        animationOrder.push(orderFlat[i]);
+    }
+    return animationOrder;
   }
 
   async correctGuess(color: any) {
@@ -246,19 +378,48 @@ export class AppComponent {
     this.wordsRemainingAfterGuess(color['answers']);
     this.groupsFound.push(color);
     this.selectedWords = [];
+    if(this.groupsFound.length == 4 && this.mistakesRemaining.length > 0) {
+      setTimeout(() => {
+        this.gameOver('victory');
+      }, 500)
+    }
   }
 
   async wrongGuess(message: string) {
     await this.bounce();
-    this.shake();
+    await this.shake();
     this.mistakesRemaining.pop();
     this.selectedWords = [];
     if(this.mistakesRemaining.length == 0)
-      this.gameOver();
+      await this.gameOver('loss');
   }
 
-  gameOver() {
-
+  async gameOver(result: string) {
+    if(result == 'victory') {
+      alert("You won!");
+    } else {
+      let groupsRemaining = [this.yellow, this.green, this.blue, this.purple];
+      for(let group of this.groupsFound) {
+        groupsRemaining.splice(groupsRemaining.indexOf(group), 1);
+      }
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 500)
+      })
+      for(let group of groupsRemaining) {
+        this.selectedWords = group['answers'];
+        await this.correctGuess(group);
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, 500)
+        })
+      }
+      setTimeout(() => {
+        alert('You lost');
+      }, 500)
+    }
   }
 
 }
