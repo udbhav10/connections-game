@@ -344,7 +344,7 @@ export class AppComponent {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve();
-        }, 500)
+        }, 250)
       })
     }
   }
@@ -389,7 +389,6 @@ export class AppComponent {
     await this.bounce();
     await this.shake();
     this.mistakesRemaining.pop();
-    this.selectedWords = [];
     if(this.mistakesRemaining.length == 0)
       await this.gameOver('loss');
   }
@@ -398,27 +397,29 @@ export class AppComponent {
     if(result == 'victory') {
       alert("You won!");
     } else {
+      this.selectedWords = [];
       let groupsRemaining = [this.yellow, this.green, this.blue, this.purple];
       for(let group of this.groupsFound) {
         groupsRemaining.splice(groupsRemaining.indexOf(group), 1);
       }
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 500)
-      })
       for(let group of groupsRemaining) {
         this.selectedWords = group['answers'];
-        await this.correctGuess(group);
         await new Promise<void>((resolve) => {
           setTimeout(() => {
             resolve();
-          }, 500)
+          }, 250)
+        })
+        await this.correctGuess(group);
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            if(this.groupsFound.length == 4) {
+              alert("You lost!");
+            }
+            resolve();
+          }, 350)
         })
       }
-      setTimeout(() => {
-        alert('You lost');
-      }, 500)
+
     }
   }
 

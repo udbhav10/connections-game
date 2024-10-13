@@ -55,7 +55,7 @@
               (click)="toggleSelection(item)"
               [ngClass]="[
                           selectedWords.length == 4 ? '' : 'cursor-pointer',
-                          selectedWords.includes(item) ? 'selectedWordTile' : ''
+                          selectedWords.includes(item) && mistakesRemaining.length ? 'selectedWordTile cursor-pointer' : ''
                           ]">
               <span 
                 class="open-sans-header" 
