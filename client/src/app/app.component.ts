@@ -27,6 +27,11 @@ export class AppComponent {
   width: number = window.innerWidth;
   groupsFound: any = [];
   mistakesRemaining: Array<number> = [0, 0, 0, 0];
+  emojis: Array<any> = [];
+  isGameOver: boolean = false;
+  guessesMade: Array<Array<number>> = [];
+  alertMessage: string = '';
+  showAlert: boolean = false;
   
   constructor(private _apiService: ApiService) {
     this.fetchConnections();
@@ -155,28 +160,42 @@ export class AppComponent {
     const blueWords = this.blue['answers'].sort((a: any, b: any) => a - b);
     const purpleWords = this.purple['answers'].sort((a: any, b: any) => a - b);    
     const key = this.compare(wordsChosen, yellowWords, greenWords, blueWords, purpleWords);
-    switch (key) {
-      case 'yellow':
-        this.correctGuess(this.yellow);
-        break;
-      case 'green':
-        this.correctGuess(this.green);
-        break;
-      case 'blue':
-        this.correctGuess(this.blue);
-        break;
-      case 'purple':
-        this.correctGuess(this.purple);
-        break;
-      case 'one away':
-        this.wrongGuess('one away');
-        break;
-      case '':
-        this.wrongGuess('');
-        break;
-      default:
-        break;
-    }
+    const selectedWordsMapped = this.selectedWords.sort().map((id) => this.words[id]);
+    if (this.guessesMade.some(guess => 
+        guess.length === selectedWordsMapped.length && 
+        guess.every((value, index) => value === selectedWordsMapped[index])
+    )) {
+      this.alertMessage = 'Already guessed';
+      this.showAlert = true;
+      setTimeout(() => {
+        this.showAlert = false;
+      }, 2500)
+    } else {
+      this.guessesMade.push(selectedWordsMapped);
+      console.log(this.guessesMade);
+      switch (key) {
+        case 'yellow':
+          this.correctGuess(this.yellow);
+          break;
+        case 'green':
+          this.correctGuess(this.green);
+          break;
+        case 'blue':
+          this.correctGuess(this.blue);
+          break;
+        case 'purple':
+          this.correctGuess(this.purple);
+          break;
+        case 'one away':
+          this.wrongGuess('one away');
+          break;
+        case '':
+          this.wrongGuess('');
+          break;
+        default:
+          break;
+      }
+    } 
   }
 
   compare(wordsChosen: Array<number>, yellowWords: Array<number>, greenWords: Array<number>, blueWords: Array<number>, purpleWords: Array<number>) {
@@ -327,11 +346,11 @@ export class AppComponent {
   
         setTimeout(() => {
           let newOrder = [];
-          for(let i = 0; i < 4; i++) {
-            let temp = orderFlat[i];
-            let tempIndex = orderFlat.indexOf(idsArray[i]);
-            orderFlat[i] = idsArray[i];
-            orderFlat[tempIndex] = temp;
+          for(let i = 0; i < source.length; i++) {
+            let sourceIndex = orderFlat.indexOf(source[i]);
+            let destIndex = orderFlat.indexOf(destination[i]);
+            orderFlat[sourceIndex] = destination[i];
+            orderFlat[destIndex] = source[i];
           }
           while (orderFlat.length) {
             newOrder.push(orderFlat.splice(0, 4));
@@ -387,6 +406,13 @@ export class AppComponent {
 
   async wrongGuess(message: string) {
     await this.bounce();
+    if (message == 'one away') {
+      this.alertMessage = 'One away';
+      this.showAlert = true;
+      setTimeout(() => {
+        this.showAlert = false;
+      }, 3000)
+    }
     await this.shake();
     this.mistakesRemaining.pop();
     if(this.mistakesRemaining.length == 0)
@@ -395,7 +421,8 @@ export class AppComponent {
 
   async gameOver(result: string) {
     if(result == 'victory') {
-      alert("You won!");
+      this.message = "You won!";
+      this.isGameOver = true;
     } else {
       this.selectedWords = [];
       let groupsRemaining = [this.yellow, this.green, this.blue, this.purple];
@@ -413,7 +440,8 @@ export class AppComponent {
         await new Promise<void>((resolve) => {
           setTimeout(() => {
             if(this.groupsFound.length == 4) {
-              alert("You lost!");
+              this.message = "Better luck next time!";
+              this.isGameOver = true;
             }
             resolve();
           }, 350)
@@ -421,6 +449,10 @@ export class AppComponent {
       }
 
     }
+  }
+
+  share() {
+
   }
 
 }

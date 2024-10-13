@@ -23,8 +23,13 @@
   </div>
 
   <!-- Message -->
-  <div id="message" class="d-flex align-items-center justify-content-center py-3">
+  <div id="message" class="d-flex align-items-center justify-content-center py-3 position-relative">
     <span class="open-sans-body font-size-md-20">{{ message }}</span>
+    <ng-container *ngIf="showAlert">
+      <div id="alert" class="alert">
+        <span class="open-sans-body font-size-md-sm-20">{{ alertMessage }}</span>
+      </div>
+    </ng-container>
   </div>
 
   <!-- Game -->
@@ -85,9 +90,14 @@
 
   <!-- Buttons -->
   <div id="buttons"  class="d-flex justify-content-center pt-2 pb-4">
-    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-20" (click)="shuffle()">Shuffle</button>
-    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-20" (click)="deselectAll()" [disabled]="!selectedWords.length">Deselect all</button>
-    <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-20" (click)="submit()" [disabled]="selectedWords.length!==4">Submit</button>
+    <ng-container *ngIf="!isGameOver">
+      <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-20" (click)="shuffle()">Shuffle</button>
+      <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-20" (click)="deselectAll()" [disabled]="!selectedWords.length">Deselect all</button>
+      <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-20" (click)="submit()" [disabled]="selectedWords.length!==4">Submit</button>
+    </ng-container>
+    <ng-container *ngIf="isGameOver">
+      <button type="button" class="btn btn-md-lg btn-outline-dark game-buttons mx-1 font-size-md-20" (click)="share()">Share</button>
+    </ng-container>
   </div>
 
 </div>
