@@ -31,6 +31,7 @@ export class AppComponent {
   isGameOver: boolean = false;
   guessesMade: Array<Array<number>> = [];
   alertMessage: string = '';
+  shareMessage: string = '';
   showAlert: boolean = false;
   
   constructor(private _apiService: ApiService) {
@@ -52,6 +53,7 @@ export class AppComponent {
       day: 'numeric' 
     };
     this.date = new Date().toLocaleDateString('en-US', options);
+    this.shareMessage = "Connections " + this.date + "\n\n";
   }
 
   getMessage() {
@@ -172,7 +174,7 @@ export class AppComponent {
       }, 2500)
     } else {
       this.guessesMade.push(selectedWordsMapped);
-      console.log(this.guessesMade);
+      this.modifyShareMessage(selectedWordsMapped);
       switch (key) {
         case 'yellow':
           this.correctGuess(this.yellow);
@@ -451,8 +453,43 @@ export class AppComponent {
     }
   }
 
-  share() {
-
+  modifyShareMessage(guess: Array<String>) {
+    let guessPattern = "";
+    for(let word of guess) {
+      Object.keys(this.words).forEach((key) => {
+        if(this.words[key] == word) {
+          if(this.yellow['answers'].includes(Number(key))) {
+            guessPattern += '🟨';
+          } else if(this.green['answers'].includes(Number(key))) {
+            guessPattern += '🟩';
+          } else if(this.blue['answers'].includes(Number(key))) {
+            guessPattern += '🟦';
+          } else if(this.purple['answers'].includes(Number(key))) {
+            guessPattern += '🟪';
+          }
+        }
+      })
+    }
+    guessPattern += "\n";
+    this.shareMessage += guessPattern;
   }
+
+  async share() {
+    try {
+      await navigator.clipboard.writeText(this.shareMessage);
+  
+      if (navigator.share) {
+        await navigator.share({
+          title: "Share your guesses!",
+          text: this.shareMessage,
+        });
+      } else {
+        alert("Message copied to clipboard!");
+      }
+    } catch (error) {
+      console.error("Failed to share:", error);
+    }
+  }
+  
 
 }
