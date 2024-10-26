@@ -47,12 +47,29 @@
 
 .game-buttons {
     border-radius: 25px;
+    color: #212529;
+    border: 1px solid #212529;
+    background-color: #fff;
+}
+
+.game-buttons:active {
+    color: #fff;
+    background-color: #212529;   
+}
+
+.game-buttons:disabled {
+    opacity: 0.5;
+}
+
+.game-buttons:disabled:active {
+    color: #212529;
+    background-color: #fff;
 }
 
 .btn-md-lg {
-    padding: 0.65rem 1.15rem;
+    padding: 0.65rem 2rem;
     @media (max-width: 768px) {
-        padding: 0.5rem 1rem;
+        padding: 0.75rem 1.25rem;
     }
 }
 
