@@ -91,12 +91,12 @@
   <!-- Buttons -->
   <div id="buttons"  class="d-flex justify-content-center pt-2 pb-4">
     <ng-container *ngIf="!isGameOver">
-      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-sm-24 user-select-none" (click)="shuffle()">Shuffle</button>
-      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-sm-24 user-select-none" (click)="deselectAll()" [disabled]="!selectedWords.length">Deselect all</button>
-      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-sm-24 user-select-none" (click)="submit()" [disabled]="selectedWords.length!==4">Submit</button>
+      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24 user-select-none" (click)="shuffle()">Shuffle</button>
+      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24 user-select-none" (click)="deselectAll()" [disabled]="!selectedWords.length">Deselect all</button>
+      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24 user-select-none" (click)="submit()" [disabled]="selectedWords.length!==4">Submit</button>
     </ng-container>
     <ng-container *ngIf="isGameOver">
-      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-sm-24 user-select-none" (click)="share()">Share</button>
+      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24 user-select-none" (click)="share()">Share</button>
     </ng-container>
   </div>
 
