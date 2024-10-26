@@ -1,4 +1,4 @@
-<div class="container-lg">
+<div class="container-lg user-select-none">
 
   <!-- Navbar -->
   <div id="navbar" class="d-flex align-items-center p-md-3 p-2 border-bottom">
@@ -63,7 +63,7 @@
                           selectedWords.includes(item) && mistakesRemaining.length ? 'selectedWordTile cursor-pointer' : ''
                           ]">
               <span 
-                class="open-sans-header user-select-none" 
+                class="open-sans-header" 
                 [ngClass]="adjustFontSizeAndWidth(words[item])">
 
                 {{words[item] | uppercase}}
@@ -91,12 +91,12 @@
   <!-- Buttons -->
   <div id="buttons"  class="d-flex justify-content-center pt-2 pb-4">
     <ng-container *ngIf="!isGameOver">
-      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24 user-select-none" (click)="shuffle()">Shuffle</button>
-      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24 user-select-none" (click)="deselectAll()" [disabled]="!selectedWords.length">Deselect all</button>
-      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24 user-select-none" (click)="submit()" [disabled]="selectedWords.length!==4">Submit</button>
+      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="shuffle()">Shuffle</button>
+      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="deselectAll()" [disabled]="!selectedWords.length">Deselect all</button>
+      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="submit()" [disabled]="selectedWords.length!==4">Submit</button>
     </ng-container>
     <ng-container *ngIf="isGameOver">
-      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24 user-select-none" (click)="share()">Share</button>
+      <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="share()">Share</button>
     </ng-container>
   </div>
 
