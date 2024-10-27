@@ -3,10 +3,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ApiService } from './services/api.service';
+import { LayoverComponent } from './components/layover/layover.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, HttpClientModule],
+  imports: [RouterOutlet, CommonModule, HttpClientModule, LayoverComponent],
   providers: [ApiService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
   alertMessage: string = '';
   shareMessage: string = '';
   showAlert: boolean = false;
+  showLayover: boolean = false;
   
   constructor(private _apiService: ApiService) {
     this.fetchConnections();
@@ -41,63 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.detectDevice();
   }
 
-  ngOnInit(): void {
-    const groupsFoundString = sessionStorage.getItem("groupsFound");
-    const mistakesRemainingString = sessionStorage.getItem("mistakesRemaining");
-    const isGameOverString = sessionStorage.getItem("isGameOver");
-    const guessesMadeString = sessionStorage.getItem("guessesMade");
-    const shareMessage = sessionStorage.getItem("shareMessage");
-    const message = sessionStorage.getItem("message");
-    console.log(sessionStorage);
-    if(groupsFoundString) {
-      try {
-        this.groupsFound = JSON.parse(groupsFoundString);
-      }
-      catch(error) {
-        console.log("Error while parsing groupsFound from cookies", error);
-      }
-    }
-    if(mistakesRemainingString) {
-      try {
-        this.mistakesRemaining = JSON.parse(mistakesRemainingString);
-      }
-      catch(error) {
-        console.log("Error while parsing mistakesRemaining from cookies", error);
-      }
-    }
-    if(isGameOverString) {
-      try {
-        this.isGameOver = isGameOverString === "true";
-      }
-      catch(error) {
-        console.log("Error while parsing isGameOver from cookies", error);
-      }
-    }
-    if(guessesMadeString) {
-      try {
-        this.guessesMade = JSON.parse(guessesMadeString);
-      }
-      catch(error) {
-        console.log("Error while parsing guessesMade from cookies", error);
-      }
-    }
-    if(shareMessage) {
-      try {
-        this.shareMessage = shareMessage;
-      }
-      catch(error) {
-        console.log("Error while parsing shareMessage from cookies", error);
-      }
-    }
-    if(message) {
-      try {
-        this.message = message;
-      }
-      catch(error) {
-        console.log("Error while parsing message from cookies", error);
-      }
-    }
-  }
+  ngOnInit(): void { }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
@@ -170,17 +116,7 @@ export class AppComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error(error);
       },
-      complete: () => {
-        const orderString = sessionStorage.getItem("order");
-        if(orderString) {
-          try {
-            this.order = JSON.parse(orderString);
-          }
-          catch(error) {
-            console.log("Error while parsing order from cookies", error);
-          }
-        }
-      }
+      complete: () => { }
     } );
   }
 
@@ -207,7 +143,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   
     this.order = shuffled;
-    sessionStorage.setItem("order", JSON.stringify(this.order));
   }
 
   wordsRemainingAfterGuess(color: Array<number>) {
@@ -219,7 +154,6 @@ export class AppComponent implements OnInit, OnDestroy {
       newOrder.push(newOrderFlat.splice(0, 4));
     }
     this.order = newOrder;
-    sessionStorage.setItem("order", JSON.stringify(this.order));
   }
 
   deselectAll() {
@@ -245,7 +179,6 @@ export class AppComponent implements OnInit, OnDestroy {
       }, 2500)
     } else {
       this.guessesMade.push(selectedWordsMapped);
-      sessionStorage.setItem("guessesMade", JSON.stringify(this.guessesMade));
       this.modifyShareMessage(selectedWordsMapped);
       switch (key) {
         case 'yellow':
@@ -470,7 +403,6 @@ export class AppComponent implements OnInit, OnDestroy {
     await this.slide();
     this.wordsRemainingAfterGuess(color['answers']);
     this.groupsFound.push(color);
-    sessionStorage.setItem("groupsFound", JSON.stringify(this.groupsFound));
     this.selectedWords = [];
     if(this.groupsFound.length == 4 && this.mistakesRemaining.length > 0) {
       setTimeout(() => {
@@ -490,7 +422,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     await this.shake();
     this.mistakesRemaining.pop();
-    sessionStorage.setItem("mistakesRemaining", JSON.stringify(this.mistakesRemaining));
     if(this.mistakesRemaining.length == 0)
       await this.gameOver('loss');
   }
@@ -498,9 +429,7 @@ export class AppComponent implements OnInit, OnDestroy {
   async gameOver(result: string) {
     if(result == 'victory') {
       this.message = "You won!";
-      sessionStorage.setItem("message", this.message);
       this.isGameOver = true;
-      sessionStorage.setItem("isGameOver", this.isGameOver.toString());
     } else {
       this.selectedWords = [];
       debugger
@@ -523,9 +452,7 @@ export class AppComponent implements OnInit, OnDestroy {
           setTimeout(() => {
             if(this.groupsFound.length == 4) {
               this.message = "Better luck next time!";
-              sessionStorage.setItem("message", this.message);
               this.isGameOver = true;
-              sessionStorage.setItem("isGameOver", this.isGameOver.toString());
             }
             resolve();
           }, 350)
@@ -554,7 +481,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     guessPattern += "\n";
     this.shareMessage += guessPattern;
-    sessionStorage.setItem("shareMessage", this.shareMessage);
   }
 
   async share() {

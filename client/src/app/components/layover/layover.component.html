@@ -1,0 +1,31 @@
+<div class="container-fluid layover-container d-flex flex-column justify-content-start align-items-center">
+
+    <!-- Navbar -->
+    <div id="navbar" class="d-flex align-items-center p-md-3 p-2 border-bottom w-100">
+        <div id="game-title">
+            <span class="roboto-serif-header font-size-md-28 me-sm-3 me-1">Connections</span>
+            <span *ngIf="!isMobile" class="roboto-serif-body font-size-md-20">{{ date }}</span>
+        </div>
+        <div class="icons-group d-flex ms-auto">
+            <span class="material-symbols-outlined me-2 font-size-md-30">
+                lightbulb
+            </span> 
+            <span class="material-symbols-outlined ms-2 me-2 font-size-md-30">
+                settings
+            </span>
+            <span class="material-symbols-outlined ms-2 me-2 font-size-md-30">
+                bar_chart
+            </span>
+            <span class="material-symbols-outlined ms-2 font-size-md-30">
+                help
+            </span>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="layover d-flex flex-column py-5 px-3 justify-content-center align-items-center h-100 w-100">
+        <img src="images/connection.png" class="connections-img mb-3"> 
+        <span class="roboto-serif-header font-size-md-40">Connections</span>
+    </div>
+
+</div>

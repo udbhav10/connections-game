@@ -5,6 +5,10 @@
 @include open-sans("header", 700);
 @include open-sans("body", 400);
 
+.main-container {
+    height: 100vh;
+}
+
 .game-grid {
     width: 100%;
     max-width: 650px;
@@ -65,6 +69,27 @@
 .game-buttons:disabled:active {
     color: #212529;
     background-color: #fff;
+}
+
+#footer {
+    .icons-group {
+        font-size: 20px;
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        i:hover {
+            animation: fa-bounce 1s;
+        }
+    }
+    @media (max-width: 768px) {
+        .icons-group {
+            font-size: 16px;
+            a {
+                margin-top: 3px;
+            }
+        }   
+    }
 }
 
 .btn-md-lg {
