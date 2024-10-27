@@ -1,136 +1,148 @@
-<ng-container *ngIf="!showLayover; else layover">
-
-  <div id="main-container" class="container-lg user-select-none d-flex flex-column main-container">
-  
-    <!-- Navbar -->
-    <div id="navbar" class="d-flex align-items-center p-md-3 p-2 border-bottom">
-      <div id="game-title">
-        <ng-container *ngIf="!isMobile; else logo">
-          <span class="roboto-serif-header font-size-md-28 me-sm-3 me-1">Connections</span>
-          <span class="roboto-serif-body font-size-md-20">{{ date }}</span>
-        </ng-container>
-        <ng-template #logo>
-          <img src="images/connection.png" height="22px">
-        </ng-template>
-      </div>
-      <div class="icons-group d-flex ms-auto">
-        <span class="material-symbols-outlined me-2 font-size-md-30">
-          lightbulb
-        </span> 
-        <span class="material-symbols-outlined ms-2 me-2 font-size-md-30">
-          settings
-        </span>
-        <span class="material-symbols-outlined ms-2 me-2 font-size-md-30">
+<div id="main-container" class="container-fluid user-select-none main-container d-flex flex-column p-0">
+  <!-- Navbar -->
+  <div id="navbar" class="container-lg d-flex align-items-center px-3 py-2 border-bottom">
+    <div id="game-title">
+      <ng-container *ngIf="!isMobile; else logo">
+        <span class="roboto-serif-header font-size-md-28 me-sm-3 me-1">Connections</span>
+        <span class="roboto-serif-body font-size-md-20">{{ date }}</span>
+      </ng-container>
+      <ng-template #logo>
+        <img src="images/connection.png" height="22px">
+      </ng-template>
+    </div>
+    <div class="icons-group d-flex ms-auto">
+      <span class="material-symbols-outlined me-2 font-size-md-30">
+        lightbulb
+      </span> 
+      <span class="material-symbols-outlined ms-2 me-2 font-size-md-30">
+        help
+      </span>
+      <span class="material-symbols-outlined ms-2 me-2 font-size-md-30">
+        settings
+      </span>
+      <ng-container *ngIf="isLoggedIn; else login">
+        <span class="material-symbols-outlined ms-2 font-size-md-30">
           bar_chart
         </span>
-        <span class="material-symbols-outlined ms-2 font-size-md-30">
-          help
-        </span>
-      </div>
-    </div>
-
-    <!-- Message -->
-    <div id="message" class="d-flex align-items-center justify-content-center py-3 position-relative">
-      <span class="open-sans-body font-size-md-20">{{ message }}</span>
-      <ng-container *ngIf="showAlert">
-        <div id="alert" class="alert">
-          <span class="open-sans-body font-size-md-sm-20">{{ alertMessage }}</span>
-        </div>
       </ng-container>
+      <ng-template #login>
+        <span class="material-symbols-outlined ms-2 font-size-md-30">
+          login
+        </span>
+      </ng-template>
     </div>
+  </div>
+  
+  <ng-container *ngIf="!showLayover">
 
-    <!-- Game -->
-    <div id="game" class="d-flex justify-content-center">
-      <div class="game-grid">
-        <ng-container *ngFor="let row of groupsFound">
-          <div class="row">
-            <div class="col d-flex flex-column m-1 justify-content-center align-items-center text-center revealedGroup dynamic-height" [ngClass]="row['class']">
-              <div class="font-size-md-sm-22 open-sans-header">
-                {{ row['category'] | uppercase }}
-              </div>
-              <div class="font-size-md-sm-18 open-sans-body">
-                <div>
-                  <ng-container *ngFor="let id of row['answers']; let i = index">
-                    {{ words[id] | uppercase }}<span *ngIf="i < row['answers'].length - 1">, </span>
-                  </ng-container>
+    <div id="content-container" class="container-lg d-flex flex-column">  
+    
+      <!-- Message -->
+      <div id="message" class="d-flex align-items-center justify-content-center py-3 position-relative">
+        <span class="open-sans-body font-size-md-20">{{ message }}</span>
+        <ng-container *ngIf="showAlert">
+          <div id="alert" class="alert">
+            <span class="open-sans-body font-size-md-sm-20">{{ alertMessage }}</span>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Game -->
+      <div id="game" class="d-flex justify-content-center">
+        <div class="game-grid">
+          <ng-container *ngFor="let row of groupsFound">
+            <div class="row">
+              <div class="col d-flex flex-column m-1 justify-content-center align-items-center text-center revealedGroup dynamic-height" [ngClass]="row['class']">
+                <div class="font-size-md-sm-22 open-sans-header">
+                  {{ row['category'] | uppercase }}
+                </div>
+                <div class="font-size-md-sm-18 open-sans-body">
+                  <div>
+                    <ng-container *ngFor="let id of row['answers']; let i = index">
+                      {{ words[id] | uppercase }}<span *ngIf="i < row['answers'].length - 1">, </span>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </ng-container>
-        <ng-container *ngFor="let row of order; let i = index">
-          <div class="row">
-            <ng-container *ngFor="let item of row; let j = index">
-              <div
-                [id]="'word' + item" 
-                class="col d-flex justify-content-center align-items-center text-center wordTile m-1 px-1 dynamic-height"
-                (click)="toggleSelection(item)"
-                [ngClass]="[
-                            selectedWords.length == 4 ? '' : 'cursor-pointer',
-                            selectedWords.includes(item) && mistakesRemaining.length ? 'selectedWordTile cursor-pointer' : ''
-                            ]">
-                <span 
-                  class="open-sans-header" 
-                  [ngClass]="adjustFontSizeAndWidth(words[item])">
+          </ng-container>
+          <ng-container *ngFor="let row of order; let i = index">
+            <div class="row">
+              <ng-container *ngFor="let item of row; let j = index">
+                <div
+                  [id]="'word' + item" 
+                  class="col d-flex justify-content-center align-items-center text-center wordTile m-1 px-1 dynamic-height"
+                  (click)="toggleSelection(item)"
+                  [ngClass]="[
+                              selectedWords.length == 4 ? '' : 'cursor-pointer',
+                              selectedWords.includes(item) && mistakesRemaining.length ? 'selectedWordTile cursor-pointer' : ''
+                              ]">
+                  <span 
+                    class="open-sans-header" 
+                    [ngClass]="adjustFontSizeAndWidth(words[item])">
 
-                  {{words[item] | uppercase}}
+                    {{words[item] | uppercase}}
 
-                </span>
-              </div>
-            </ng-container>
-          </div>
-        </ng-container>
+                  </span>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
       </div>
-    </div>
 
-    <!-- Mistakes remaining -->
-    <div id="mistakes" class="d-flex justify-content-center py-3">
-      <div class="d-flex align-items-center">
-        <span class="open-sans-body font-size-md-20 me-2">Mistakes remaining: </span>
-        <ng-container *ngFor="let item of mistakesRemaining">
-          <span class="material-symbols-outlined ms-1 font-size-md-20">
-            radio_button_unchecked
-          </span>
-        </ng-container>
+      <!-- Mistakes remaining -->
+      <div id="mistakes" class="d-flex justify-content-center py-3">
+        <div class="d-flex align-items-center">
+          <span class="open-sans-body font-size-md-20 me-2">Mistakes remaining: </span>
+          <ng-container *ngFor="let item of mistakesRemaining">
+            <span class="material-symbols-outlined ms-1 font-size-md-20">
+              radio_button_unchecked
+            </span>
+          </ng-container>
+        </div>
       </div>
-    </div>
 
-    <!-- Buttons -->
-    <div id="buttons"  class="d-flex justify-content-center pt-2 pb-4">
-      <ng-container *ngIf="!isGameOver">
-        <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="shuffle()"  [disabled]="!mistakesRemaining.length">Shuffle</button>
-        <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="deselectAll()" [disabled]="!mistakesRemaining.length || !selectedWords.length">Deselect all</button>
-        <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="submit()" [disabled]="!mistakesRemaining.length || selectedWords.length!==4">Submit</button>
-      </ng-container>
-      <ng-container *ngIf="isGameOver">
-        <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="share()">Share</button>
-      </ng-container>
-    </div>
+      <!-- Buttons -->
+      <div id="buttons"  class="d-flex justify-content-center pt-2 pb-4">
+        <ng-container *ngIf="!isGameOver">
+          <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="shuffle()"  [disabled]="!mistakesRemaining.length">Shuffle</button>
+          <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="deselectAll()" [disabled]="!mistakesRemaining.length || !selectedWords.length">Deselect all</button>
+          <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="submit()" [disabled]="!mistakesRemaining.length || selectedWords.length!==4">Submit</button>
+        </ng-container>
+        <ng-container *ngIf="isGameOver">
+          <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="share()">Share</button>
+        </ng-container>
+      </div>   
+    </div>    
+  </ng-container>
+
+  <ng-container *ngIf="showLayover">
+
+    <app-layover
+      [date]="date"
+      [isMobile]="isMobile"
+      [isLoggedIn]="isLoggedIn"
+      [isGameOver]="isGameOver"
+      [layoverHeight]="layoverHeight"
+      (playEventEmitter)="showLayover=false;"
+    >
+    </app-layover>
     
-    <!-- Footer -->
-    <div id="footer" class="d-flex align-items-center p-md-3 p-2 border-top mt-auto">
-      <div id="footer-name">
-        <span class="roboto-serif-header font-size-md-14">Made by Udbhav Dalal</span>
-      </div>
-      <div class="icons-group d-flex ms-auto">
-        <a href="https://www.instagram.com/udbhavdalal/" target="_blank"><i class="fa-brands fa-instagram me-3 cursor-pointer"></i></a>
-        <a href="mailto:udbhavdalal062001@gmail.com" target="_blank"><i class="fa-regular fa-envelope ms-2 me-3 cursor-pointer"></i></a>
-        <a href="https://x.com/UdbhavDalal" target="_blank"><i class="fa-brands fa-twitter ms-2 cursor-pointer"></i></a>
-      </div>
+  </ng-container>
+
+  <!-- Footer -->
+  <div id="footer" class="container-lg d-flex align-items-center px-3 py-2 border-top mt-auto">
+    <div id="footer-name">
+      <span class="roboto-serif-header font-size-md-14">Made by Udbhav Dalal</span>
     </div>
-  
+    <div class="icons-group d-flex ms-auto">
+      <a href="https://www.instagram.com/udbhavdalal/" target="_blank"><i class="fa-brands fa-instagram me-3 cursor-pointer"></i></a>
+      <a href="mailto:udbhavdalal062001@gmail.com" target="_blank"><i class="fa-regular fa-envelope ms-2 me-3 cursor-pointer"></i></a>
+      <a href="https://x.com/UdbhavDalal" target="_blank"><i class="fa-brands fa-twitter ms-2 cursor-pointer"></i></a>
+    </div>
   </div>
 
-</ng-container>
-
-<ng-template #layover>
-
-  <app-layover
-    [date]="date"
-    [isMobile]="isMobile"
-  >
-  </app-layover>
-  
-</ng-template>
+</div>
 
 <router-outlet />

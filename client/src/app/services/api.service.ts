@@ -7,13 +7,19 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ApiService {
-  // private baseUrl = 'http://localhost:3000/';
-  private baseUrl = '/';
+  // baseUrl = 'http://localhost:3000/';
+  baseUrl = '/';
 
   constructor(private http: HttpClient) {}
 
   getTodaysWords(): Observable<any> {
     return this.http.get(`${this.baseUrl}api/todays-words`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getLoginStatus(): Observable<any> {
+    return this.http.get<{ isLoggedIn: boolean }>(`${this.baseUrl}login-status`).pipe(
       catchError(this.handleError)
     );
   }

@@ -1,16 +1,47 @@
 @import "../../../styles.scss";
 @import "../../app.component.scss";
 
-.layover-container {
-    height: 100vh;
-    width: 100vw;
-    .layover {
-        background-color: $layoverBackground;
-        .connections-img {
-            height: 150px;
-            @media (max-width: 768px) {
-                height: 80px;
+
+.layover {
+    min-height: fit-content;
+    background-color: $layoverBackground;
+    .connections-img {
+        height: 150px;
+        @media (max-width: 768px) {
+            height: 80px;
+        }
+    }
+    .play-button {
+        border-radius: 25px;
+        width: 70%;
+        max-width: 200px;
+        color: #fff;
+        border: 1px solid #212529;
+        background-color: #212529;
+    }
+    
+    .play-button:active {
+        color: #fff;
+        background-color: #2125297e;   
+    }
+
+    .login-button-div {
+        width: 70%;
+        max-width: 200px;
+        a {
+            .login-button {
+                width: 100%;
+                border-radius: 25px;
+                color: #212529;
+                border: 1px solid #212529;
+                background-color: transparent;
+            }
+            
+            .login-button:active {
+                color: #fff;
+                background-color: #2125297e;   
             }
         }
     }
 }
+

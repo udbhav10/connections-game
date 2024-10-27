@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ApiService } from './services/api.service';
 import { LayoverComponent } from './components/layover/layover.component';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -34,20 +35,28 @@ export class AppComponent implements OnInit, OnDestroy {
   alertMessage: string = '';
   shareMessage: string = '';
   showAlert: boolean = false;
-  showLayover: boolean = false;
+  showLayover: boolean = true;
+  isLoggedIn: boolean = false;
+  layoverHeight: number = 0;
   
   constructor(private _apiService: ApiService) {
+    this.fetchLoginStatus();
     this.fetchConnections();
     this.fetchTodayDate();
     this.getMessage();
     this.detectDevice();
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.getLayoverHeight();
+    }, 10)
+   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
     this.width = this.detectDevice();
+    this.getLayoverHeight();
   }
 
   fetchTodayDate() {
@@ -71,8 +80,21 @@ export class AppComponent implements OnInit, OnDestroy {
     return width;
   }
 
+  getLayoverHeight() {
+    const headerHeight = document.getElementById('navbar')?.offsetHeight || 0;
+    const footerHeight = document.getElementById('footer')?.offsetHeight || 0;
+    const totalHeight = document.getElementById('main-container')?.offsetHeight || 0;
+    this.layoverHeight = totalHeight - (headerHeight + footerHeight);
+  }
+
   adjustFontSizeAndWidth(word: string): string {
-    if(this.width < 370) {
+    if(this.width < 350) {
+      if(word?.length >= 9 && word?.length < 12) {
+        return 'font-variation-width-85 font-size-md-sm-20';
+      } else if(word?.length >= 12) {
+        return 'font-variation-width-85 font-size-md-sm-17';
+      }
+    } else if(this.width < 370) {
       if(word?.length >= 10 && word?.length < 12) {
         return 'font-variation-width-85 font-size-md-sm-20';
       } else if(word?.length >= 12) {
@@ -109,6 +131,22 @@ export class AppComponent implements OnInit, OnDestroy {
           this.green = this.apiResponse['value']['green'];
           this.blue = this.apiResponse['value']['blue'];
           this.purple = this.apiResponse['value']['purple'];
+        } catch(err) {
+
+        }
+      },
+      error: (error) => {
+        console.error(error);
+      },
+      complete: () => { }
+    } );
+  }
+
+  fetchLoginStatus() {
+    this.apiResponse = this._apiService.getLoginStatus().subscribe({
+      next: (res) => {
+        try {
+          this.isLoggedIn = res.isLoggedIn;
         } catch(err) {
 
         }

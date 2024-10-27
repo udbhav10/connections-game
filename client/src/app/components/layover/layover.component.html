@@ -1,31 +1,12 @@
-<div class="container-fluid layover-container d-flex flex-column justify-content-start align-items-center">
-
-    <!-- Navbar -->
-    <div id="navbar" class="d-flex align-items-center p-md-3 p-2 border-bottom w-100">
-        <div id="game-title">
-            <span class="roboto-serif-header font-size-md-28 me-sm-3 me-1">Connections</span>
-            <span *ngIf="!isMobile" class="roboto-serif-body font-size-md-20">{{ date }}</span>
-        </div>
-        <div class="icons-group d-flex ms-auto">
-            <span class="material-symbols-outlined me-2 font-size-md-30">
-                lightbulb
-            </span> 
-            <span class="material-symbols-outlined ms-2 me-2 font-size-md-30">
-                settings
-            </span>
-            <span class="material-symbols-outlined ms-2 me-2 font-size-md-30">
-                bar_chart
-            </span>
-            <span class="material-symbols-outlined ms-2 font-size-md-30">
-                help
-            </span>
-        </div>
+<div [style.height.px]="layoverHeight" class="container-fluid layover d-flex flex-column py-5 px-3 justify-content-center align-items-center">
+    <img src="images/connection.png" class="connections-img mb-2"> 
+    <span class="roboto-serif-header font-size-md-40 mb-1">Connections</span>
+    <span class="open-sans-body font-size-md-20 text-center mb-4">Solve today's connections and build your streak!</span>
+    <button class="btn play-button font-size-md-24 py-2" [ngClass]="isLoggedIn ? 'mb-4' : 'mb-3'" (click)="play()">{{isGameOver ? 'Admire Puzzle' : 'Play'}}</button>
+    <div *ngIf="!isLoggedIn" class="login-button-div mb-4">
+        <a [href]="_apiService.baseUrl + 'login/federated/google'"><button class="btn login-button font-size-md-24 py-2">Log in</button></a>
     </div>
-
-    <!-- Content -->
-    <div class="layover d-flex flex-column py-5 px-3 justify-content-center align-items-center h-100 w-100">
-        <img src="images/connection.png" class="connections-img mb-3"> 
-        <span class="roboto-serif-header font-size-md-40">Connections</span>
-    </div>
-
+    <span class="open-sans-header font-size-md-18">{{ date }}</span>
+    <span class="open-sans-body font-size-md-16">By Udbhav Dalal</span>
 </div>
+
