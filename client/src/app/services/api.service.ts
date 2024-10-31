@@ -24,6 +24,25 @@ export class ApiService {
     );
   }
 
+  saveProgressData(progressData: any, attempts: number, resultFlag: boolean | null): Observable<any> {
+    const inputParams = {
+      progressData: progressData,
+      attempts: attempts,
+      resultFlag: resultFlag
+    };
+    return this.http.post(`${this.baseUrl}save-progress`, inputParams, {
+      headers: { 'Content-Type': 'application/json' }
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getProgressData() {
+    return this.http.get(`${this.baseUrl}get-progress`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   logout() {
     return this.http.post(`${this.baseUrl}logout`, {});
   }

@@ -39,9 +39,10 @@ export class AppComponent implements OnInit, OnDestroy {
   showLayover: boolean = true;
   isLoggedIn: boolean = false;
   layoverHeight: number = 0;
+  attempts: number = 0;
+  resultFlag: boolean | null = null;
   
   constructor(public _apiService: ApiService) {
-    this.fetchLoginStatus();
     this.fetchConnections();
     this.fetchTodayDate();
     this.getMessage();
@@ -157,7 +158,9 @@ export class AppComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error(error);
       },
-      complete: () => { }
+      complete: () => { 
+        this.fetchLoginStatus();
+      }
     } );
   }
 
@@ -173,7 +176,11 @@ export class AppComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error(error);
       },
-      complete: () => { }
+      complete: () => { 
+        if(this.isLoggedIn) {
+          this.getData();
+        }
+      }
     } );
   }
 
@@ -278,6 +285,7 @@ export class AppComponent implements OnInit, OnDestroy {
     } else {
       this.guessesMade.push(selectedWordsMapped);
       this.modifyShareMessage(selectedWordsMapped);
+      this.attempts++;
       switch (key) {
         case 'yellow':
           this.correctGuess(this.yellow);
@@ -502,6 +510,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.wordsRemainingAfterGuess(color['answers']);
     this.groupsFound.push(color);
     this.selectedWords = [];
+    this.storeData();
     if(this.groupsFound.length == 4 && this.mistakesRemaining.length > 0) {
       setTimeout(() => {
         this.gameOver('victory');
@@ -520,6 +529,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     await this.shake();
     this.mistakesRemaining.pop();
+    this.storeData();
     if(this.mistakesRemaining.length == 0)
       await this.gameOver('loss');
   }
@@ -528,9 +538,11 @@ export class AppComponent implements OnInit, OnDestroy {
     if(result == 'victory') {
       this.message = "You won!";
       this.isGameOver = true;
+      this.resultFlag = true;
     } else {
       this.selectedWords = [];
       let groupsRemaining = [this.yellow, this.green, this.blue, this.purple];
+      this.resultFlag = false;
       for (let group of this.groupsFound) {
           const index = groupsRemaining.findIndex(g => g.class === group.class);
           if (index !== -1) {
@@ -557,6 +569,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
 
     }
+    this.storeData();
   }
 
   modifyShareMessage(guess: Array<String>) {
@@ -619,6 +632,55 @@ export class AppComponent implements OnInit, OnDestroy {
 
   detectTouchDevice(): boolean {
     return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }
+
+  storeData() {
+    if(this.isLoggedIn) {
+      
+      const progressData = {
+        groupsFound: this.groupsFound,
+        mistakesRemaining: this.mistakesRemaining,
+        isGameOver: this.isGameOver,
+        guessesMade: this.guessesMade,
+        shareMessage: this.shareMessage,
+        message: this.message,
+        order: this.order
+      };
+      const attempts = this.attempts;
+      const resultFlag = this.resultFlag;
+      this._apiService.saveProgressData(progressData, attempts, resultFlag).subscribe({
+        next: (response) => {
+          console.log('Progress data saved:', response);
+        },
+        error: (error) => {
+          console.error('Error saving progress data:', error);
+        }
+      });  
+    }
+  }
+
+  getData() {
+    this._apiService.getProgressData().subscribe({
+      next: (res: any) => {
+        if (Object.keys(res).length > 0) {
+          this.attempts = res.attempts;
+          this.resultFlag = res.result_flag;
+          this.groupsFound = res.progressData.groupsFound;
+          this.guessesMade = res.progressData.guessesMade;
+          this.isGameOver = res.progressData.isGameOver;
+          this.message = res.progressData.message;
+          this.mistakesRemaining = res.progressData.mistakesRemaining;
+          this.order = res.progressData.order;
+          this.shareMessage = res.progressData.shareMessage;
+        }
+      },
+      error: (error) => {
+
+      },
+      complete: () => {
+
+      }
+    })
   }
   
   ngOnDestroy(): void { }
