@@ -108,15 +108,12 @@ app.listen(PORT, () => {
 
 app.get('/api/todays-words', async (req, res) => {
   try {  
-    const query = `
-      SELECT * FROM connections 
-      WHERE date = (CURRENT_DATE AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kolkata')::date;
-    `;
+    const query = `SELECT * FROM connections WHERE date = CURRENT_DATE;`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (error) {
-    console.error('Error fetching today’s records:', error);
-    res.status(500).send('Server Error');
+      console.error('Error fetching today’s records:', error);
+      res.status(500).send('Server Error');
   }
 });
 
