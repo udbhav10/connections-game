@@ -76,8 +76,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   detectDevice() {
     const width = window.innerWidth;
-    this.isMobile = width < 576;
-    this.isTablet = width >= 576 && width < 768;
+    this.isMobile = width < 577;
+    this.isTablet = width >= 577 && width < 769;
     return width;
   }
 
@@ -90,35 +90,53 @@ export class AppComponent implements OnInit, OnDestroy {
 
   adjustFontSizeAndWidth(word: string): string {
     if(this.width < 350) {
-      if(word?.length >= 9 && word?.length < 12) {
-        return 'font-variation-width-85 font-size-md-sm-20';
-      } else if(word?.length >= 12) {
-        return 'font-variation-width-85 font-size-md-sm-17';
-      }
+        if(word?.length == 8) {
+          return 'font-variation-width-85 font-size-md-sm-22';
+        } else if(word?.length == 9) {
+            return 'font-variation-width-85 font-size-md-sm-20';
+        } else if(word?.length == 10) {
+            return 'font-variation-width-85 font-size-md-sm-18';
+        } else if(word?.length > 10) {
+            return 'font-variation-width-85 font-size-md-sm-16';
+        } 
     } else if(this.width < 370) {
-      if(word?.length >= 10 && word?.length < 12) {
-        return 'font-variation-width-85 font-size-md-sm-20';
-      } else if(word?.length >= 12) {
-        return 'font-variation-width-85 font-size-md-sm-17';
-      }
+        if(word?.length == 9) {
+          return 'font-variation-width-85 font-size-md-sm-22';
+        } else if(word?.length == 10) {
+            return 'font-variation-width-85 font-size-md-sm-20';
+        } else if(word?.length == 11) {
+            return 'font-variation-width-85 font-size-md-sm-18';
+        } else if(word?.length > 11) {
+            return 'font-variation-width-85 font-size-md-sm-16';
+        } 
     } else if (this.isMobile) {
-      if(word?.length >= 12 && word?.length < 14) {
-        return 'font-variation-width-85 font-size-md-sm-20';
-      } else if(word?.length >= 14) {
-        return 'font-variation-width-85 font-size-md-sm-17';
-      }     
+        if(word?.length >= 9 && word?.length <= 10) {
+            return 'font-variation-width-85 font-size-md-sm-22';
+        } else if(word?.length == 11) {
+            return 'font-variation-width-85 font-size-md-sm-20';
+        } else if(word?.length == 12) {
+            return 'font-variation-width-85 font-size-md-sm-18';
+        } else if(word?.length > 12) {
+            return 'font-variation-width-85 font-size-md-sm-17';
+        }     
     } else if(this.isTablet) {
-      if(word?.length >= 13) {
-        return 'font-variation-width-85 font-size-md-sm-20';
-      }
+        if(word?.length >= 13 && word?.length <= 14) {
+            return 'font-variation-width-85 font-size-md-sm-22';
+        } else if(word?.length > 14 && word?.length <= 16) {
+            return 'font-variation-width-85 font-size-md-sm-20';
+        } else if(word?.length > 16) {
+            return 'font-variation-width-85 font-size-md-sm-16';
+        }
     } else {
-      if(word?.length >= 11 && word?.length < 13) {
-        return 'font-variation-width-85 font-size-md-sm-20';
-      } else if(word?.length >= 13) {
-        return 'font-variation-width-85 font-size-md-sm-17';
-      }
+        if(word?.length >= 12 && word?.length < 14) {
+            return 'font-variation-width-85 font-size-md-sm-22';
+        } else if(word?.length >= 14 && word?.length < 16) {
+            return 'font-variation-width-85 font-size-md-sm-20';
+        } else if(word?.length >= 16) {
+            return 'font-variation-width-85 font-size-md-sm-16';
+        }
     }
-    return 'font-size-md-sm-20';
+    return 'font-size-md-sm-22';
   }
 
   fetchConnections() {
@@ -179,21 +197,50 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  shuffle() {
+  blink(): Promise<void> {
 
-    const orderFlat = this.order.flat();
+    return new Promise((resolve) => {
+      const wordTiles = document.querySelectorAll('.wordTile span');
+      wordTiles.forEach(span => {
+        span.classList.add('blink');
+        setTimeout(() => {
+          span.classList.remove('blink');
+        }, 500);
+      });
+      setTimeout(() => {
+        resolve();
+      }, 500);
+    })
+  }
+
+  shuffle(): Promise<void> {
+
+    return new Promise((resolve) => {
+
+      const orderFlat = this.order.flat();
+      
+      for (let i = orderFlat.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [orderFlat[i], orderFlat[j]] = [orderFlat[j], orderFlat[i]];
+      }
     
-    for (let i = orderFlat.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [orderFlat[i], orderFlat[j]] = [orderFlat[j], orderFlat[i]];
-    }
-  
-    const shuffled = [];
-    while (orderFlat.length) {
-      shuffled.push(orderFlat.splice(0, 4));
-    }
-  
-    this.order = shuffled;
+      const shuffled = [];
+      while (orderFlat.length) {
+        shuffled.push(orderFlat.splice(0, 4));
+      }
+    
+      this.order = shuffled;
+
+      setTimeout(() => {
+        resolve();
+      }, 0);
+    })
+
+  }
+
+  async shuffleAndBlink() {
+    await this.shuffle();
+    await this.blink();
   }
 
   wordsRemainingAfterGuess(color: Array<number>) {
@@ -307,7 +354,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if(this.mistakesRemaining.length > 0) {
       return new Promise((resolve) => {
 
-        const totalDuration = this.selectedWords.length * 100 + 650;
+        const totalDuration = this.selectedWords.length * 100 + 450;
         let idsArray = [];
         const bounceOrder = this.getAnimationOrder();
   
@@ -325,13 +372,13 @@ export class AppComponent implements OnInit, OnDestroy {
             element?.classList.add('bounce');
             setTimeout(() => {
               element?.classList.remove('bounce');
-            }, 650);
+            }, 450);
           }, i * 100);
         }
     
         setTimeout(() => {
           resolve();
-        }, totalDuration + 50);
+        }, totalDuration + 150);
       });
     } else {
       return new Promise((resolve) => {
@@ -483,7 +530,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.isGameOver = true;
     } else {
       this.selectedWords = [];
-      debugger
       let groupsRemaining = [this.yellow, this.green, this.blue, this.purple];
       for (let group of this.groupsFound) {
           const index = groupsRemaining.findIndex(g => g.class === group.class);
@@ -551,23 +597,23 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  setActive(icon: HTMLElement) {
-    icon.classList.add('active');
+  setActiveTouch(icon: HTMLElement) {
+    icon.classList.add('active-touch');
   }
 
-  removeActive(icon: HTMLElement) {
-    icon.classList.remove('active');
+  removeActiveTouch(icon: HTMLElement) {
+    icon.classList.remove('active-touch');
   }
 
   setActiveMouse(icon: HTMLElement) {
     if(!this.detectTouchDevice()) {
-      icon.classList.add('active');
+      icon.classList.add('active-mouse');
     }
   }
 
   removeActiveMouse(icon: HTMLElement) {
     if(!this.detectTouchDevice()) {
-      icon.classList.remove('active');
+      icon.classList.remove('active-mouse');
     }
   }
 
