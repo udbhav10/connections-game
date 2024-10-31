@@ -11,18 +11,53 @@
       </ng-template>
     </div>
     <div class="icons-group d-flex ms-auto align-items-center">
-      <span class="material-symbols-outlined me-2 font-size-md-34 cursor-pointer">
+      <span
+        #iconBulb 
+        class="material-symbols-outlined me-2 font-size-md-34 cursor-pointer" 
+        (touchstart)="setActive(iconBulb)"
+        (mouseenter)="setActiveMouse(iconBulb)"
+        (mouseleave)="removeActiveMouse(iconBulb)"
+        (touchend)="removeActive(iconBulb)"
+        (touchcancel)="removeActive(iconBulb)"
+      >
         lightbulb
       </span> 
-      <span class="material-symbols-outlined ms-2 me-2 font-size-md-34 cursor-pointer">
+      <span
+        #iconHelp 
+        class="material-symbols-outlined ms-2 me-2 font-size-md-34 cursor-pointer"
+        (touchstart)="setActive(iconHelp)"
+        (mouseenter)="setActiveMouse(iconHelp)"
+        (mouseleave)="removeActiveMouse(iconHelp)"
+        (touchend)="removeActive(iconHelp)"
+        (touchcancel)="removeActive(iconHelp)"
+      >
         help
       </span>
-      <span class="material-symbols-outlined ms-2 me-2 font-size-md-34 cursor-pointer">
+      <span
+        #iconSettings 
+        class="material-symbols-outlined ms-2 me-2 font-size-md-34 cursor-pointer"
+        (touchstart)="setActive(iconSettings)"
+        (mouseenter)="setActiveMouse(iconSettings)"
+        (mouseleave)="removeActiveMouse(iconSettings)"
+        (touchend)="removeActive(iconSettings)"
+        (touchcancel)="removeActive(iconSettings)"
+      >
         settings
       </span>
       <ng-container *ngIf="isLoggedIn; else login">
         <div class="d-flex" ngbDropdown>
-          <span class="material-symbols-outlined ms-2 font-size-md-34 cursor-pointer" id="barChartDropdown" data-no-icon="true" ngbDropdownToggle>
+          <span
+            #iconAcc 
+            class="material-symbols-outlined ms-2 font-size-md-34 cursor-pointer" 
+            id="barChartDropdown" 
+            data-no-icon="true"
+            (touchstart)="setActive(iconAcc)"
+            (mouseenter)="setActiveMouse(iconAcc)"
+            (mouseleave)="removeActiveMouse(iconAcc)"
+            (touchend)="removeActive(iconAcc)"
+            (touchcancel)="removeActive(iconAcc)"
+            ngbDropdownToggle
+          >
             account_circle
           </span>
           <div ngbDropdownMenu aria-labelledby="barChartDropdown">
@@ -33,7 +68,15 @@
       </ng-container>
       <ng-template #login>
         <a class="d-flex text-decoration-none" style="color: black;" [href]="_apiService.baseUrl + 'login/federated/google'">
-          <span class="material-symbols-outlined ms-2 font-size-md-34 cursor-pointer">
+          <span
+            #iconLogin 
+            class="material-symbols-outlined ms-2 font-size-md-34 cursor-pointer"
+            (touchstart)="setActive(iconLogin)"
+            (mouseenter)="setActiveMouse(iconLogin)"
+            (mouseleave)="removeActiveMouse(iconLogin)"
+            (touchend)="removeActive(iconLogin)"
+            (touchcancel)="removeActive(iconLogin)"
+          >
             login
           </span>
         </a>

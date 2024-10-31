@@ -550,6 +550,30 @@ export class AppComponent implements OnInit, OnDestroy {
       console.error("Failed to share:", error);
     }
   }
+
+  setActive(icon: HTMLElement) {
+    icon.classList.add('active');
+  }
+
+  removeActive(icon: HTMLElement) {
+    icon.classList.remove('active');
+  }
+
+  setActiveMouse(icon: HTMLElement) {
+    if(!this.detectTouchDevice()) {
+      icon.classList.add('active');
+    }
+  }
+
+  removeActiveMouse(icon: HTMLElement) {
+    if(!this.detectTouchDevice()) {
+      icon.classList.remove('active');
+    }
+  }
+
+  detectTouchDevice(): boolean {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }
   
   ngOnDestroy(): void { }
 

@@ -5,6 +5,10 @@
 @include open-sans("header", 700);
 @include open-sans("body", 400);
 
+.active {
+    scale: 1.1;
+}
+
 .main-container {
     height: 100vh;
 }
