@@ -3,26 +3,26 @@
   <div id="navbar" class="container-lg d-flex align-items-center px-3 py-2 py-md-3 border-bottom">
     <div id="game-title">
       <ng-container *ngIf="!isMobile; else logo">
-        <span class="roboto-serif-header font-size-md-28 me-sm-3 me-1">Connections</span>
-        <span class="roboto-serif-body font-size-md-20">{{ date }}</span>
+        <span class="roboto-serif-header font-size-md-32 me-sm-3 me-1">Connections</span>
+        <span class="roboto-serif-body font-size-md-24">{{ date }}</span>
       </ng-container>
       <ng-template #logo>
-        <img src="images/connection.png" height="22px">
+        <img src="images/connection.png" height="26px">
       </ng-template>
     </div>
     <div class="icons-group d-flex ms-auto align-items-center">
-      <span class="material-symbols-outlined me-2 font-size-md-30 cursor-pointer">
+      <span class="material-symbols-outlined me-2 font-size-md-34 cursor-pointer">
         lightbulb
       </span> 
-      <span class="material-symbols-outlined ms-2 me-2 font-size-md-30 cursor-pointer">
+      <span class="material-symbols-outlined ms-2 me-2 font-size-md-34 cursor-pointer">
         help
       </span>
-      <span class="material-symbols-outlined ms-2 me-2 font-size-md-30 cursor-pointer">
+      <span class="material-symbols-outlined ms-2 me-2 font-size-md-34 cursor-pointer">
         settings
       </span>
       <ng-container *ngIf="isLoggedIn; else login">
         <div class="d-flex" ngbDropdown>
-          <span class="material-symbols-outlined ms-2 font-size-md-30 cursor-pointer" id="barChartDropdown" data-no-icon="true" ngbDropdownToggle>
+          <span class="material-symbols-outlined ms-2 font-size-md-34 cursor-pointer" id="barChartDropdown" data-no-icon="true" ngbDropdownToggle>
             account_circle
           </span>
           <div ngbDropdownMenu aria-labelledby="barChartDropdown">
@@ -33,7 +33,7 @@
       </ng-container>
       <ng-template #login>
         <a class="d-flex text-decoration-none" style="color: black;" [href]="_apiService.baseUrl + 'login/federated/google'">
-          <span class="material-symbols-outlined ms-2 font-size-md-30 cursor-pointer">
+          <span class="material-symbols-outlined ms-2 font-size-md-34 cursor-pointer">
             login
           </span>
         </a>
@@ -142,7 +142,7 @@
   <!-- Footer -->
   <div id="footer" class="container-lg d-flex align-items-center px-3 py-2 py-md-3 border-top mt-auto">
     <div id="footer-name">
-      <span class="roboto-serif-header font-size-md-14">Made by Udbhav Dalal</span>
+      <span class="roboto-serif-header font-size-md-16">Made by Udbhav Dalal</span>
     </div>
     <div class="icons-group d-flex ms-auto">
       <a href="https://www.instagram.com/udbhavdalal/" target="_blank"><i class="fa-brands fa-instagram me-3 cursor-pointer"></i></a>
