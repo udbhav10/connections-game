@@ -101,23 +101,23 @@ export class AppComponent implements OnInit, OnDestroy {
             return 'font-variation-width-85 font-size-md-sm-16';
         } 
     } else if(this.width < 370) {
-        if(word?.length == 9) {
+        if(word?.length == 8) {
           return 'font-variation-width-85 font-size-md-sm-22';
+        } else if(word?.length == 9) {
+            return 'font-variation-width-85 font-size-md-sm-20';
+        } else if(word?.length == 10) {
+            return 'font-variation-width-85 font-size-md-sm-18';
+        } else if(word?.length > 10) {
+            return 'font-variation-width-85 font-size-md-sm-16';
+        } 
+    } else if (this.isMobile) {
+        if(word?.length >= 8 && word?.length <= 9) {
+            return 'font-variation-width-85 font-size-md-sm-22';
         } else if(word?.length == 10) {
             return 'font-variation-width-85 font-size-md-sm-20';
         } else if(word?.length == 11) {
             return 'font-variation-width-85 font-size-md-sm-18';
         } else if(word?.length > 11) {
-            return 'font-variation-width-85 font-size-md-sm-16';
-        } 
-    } else if (this.isMobile) {
-        if(word?.length >= 9 && word?.length <= 10) {
-            return 'font-variation-width-85 font-size-md-sm-22';
-        } else if(word?.length == 11) {
-            return 'font-variation-width-85 font-size-md-sm-20';
-        } else if(word?.length == 12) {
-            return 'font-variation-width-85 font-size-md-sm-18';
-        } else if(word?.length > 12) {
             return 'font-variation-width-85 font-size-md-sm-17';
         }     
     } else if(this.isTablet) {
