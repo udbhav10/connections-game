@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ApiService } from './services/api.service';
 import { LayoverComponent } from './components/layover/layover.component';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, HttpClientModule, LayoverComponent],
+  imports: [RouterOutlet, CommonModule, HttpClientModule, LayoverComponent, NgbDropdownModule],
   providers: [ApiService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -39,7 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
   layoverHeight: number = 0;
   
-  constructor(private _apiService: ApiService) {
+  constructor(public _apiService: ApiService) {
     this.fetchLoginStatus();
     this.fetchConnections();
     this.fetchTodayDate();
@@ -156,6 +157,18 @@ export class AppComponent implements OnInit, OnDestroy {
       },
       complete: () => { }
     } );
+  }
+
+  logout() {
+    this._apiService.logout().subscribe({
+      next: (res) => {
+        window.location.reload();
+      },
+      error: (error) => {
+        console.error(error);
+      },
+      complete: () => { }
+    });
   }
 
   toggleSelection(item: number) {

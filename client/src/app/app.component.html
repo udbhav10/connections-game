@@ -1,6 +1,6 @@
 <div id="main-container" class="container-fluid user-select-none main-container d-flex flex-column p-0">
   <!-- Navbar -->
-  <div id="navbar" class="container-lg d-flex align-items-center px-3 py-2 border-bottom">
+  <div id="navbar" class="container-lg d-flex align-items-center px-3 py-2 py-md-3 border-bottom">
     <div id="game-title">
       <ng-container *ngIf="!isMobile; else logo">
         <span class="roboto-serif-header font-size-md-28 me-sm-3 me-1">Connections</span>
@@ -10,25 +10,33 @@
         <img src="images/connection.png" height="22px">
       </ng-template>
     </div>
-    <div class="icons-group d-flex ms-auto">
-      <span class="material-symbols-outlined me-2 font-size-md-30">
+    <div class="icons-group d-flex ms-auto align-items-center">
+      <span class="material-symbols-outlined me-2 font-size-md-30 cursor-pointer">
         lightbulb
       </span> 
-      <span class="material-symbols-outlined ms-2 me-2 font-size-md-30">
+      <span class="material-symbols-outlined ms-2 me-2 font-size-md-30 cursor-pointer">
         help
       </span>
-      <span class="material-symbols-outlined ms-2 me-2 font-size-md-30">
+      <span class="material-symbols-outlined ms-2 me-2 font-size-md-30 cursor-pointer">
         settings
       </span>
       <ng-container *ngIf="isLoggedIn; else login">
-        <span class="material-symbols-outlined ms-2 font-size-md-30">
-          bar_chart
-        </span>
+        <div class="d-flex" ngbDropdown>
+          <span class="material-symbols-outlined ms-2 font-size-md-30 cursor-pointer" id="barChartDropdown" data-no-icon="true" ngbDropdownToggle>
+            account_circle
+          </span>
+          <div ngbDropdownMenu aria-labelledby="barChartDropdown">
+            <button ngbDropdownItem>Stats - Coming Soon!</button>
+            <button (click)="logout()" ngbDropdownItem>Log Out</button>
+          </div>
+        </div>
       </ng-container>
       <ng-template #login>
-        <span class="material-symbols-outlined ms-2 font-size-md-30">
-          login
-        </span>
+        <a class="d-flex text-decoration-none" style="color: black;" [href]="_apiService.baseUrl + 'login/federated/google'">
+          <span class="material-symbols-outlined ms-2 font-size-md-30 cursor-pointer">
+            login
+          </span>
+        </a>
       </ng-template>
     </div>
   </div>
@@ -132,7 +140,7 @@
   </ng-container>
 
   <!-- Footer -->
-  <div id="footer" class="container-lg d-flex align-items-center px-3 py-2 border-top mt-auto">
+  <div id="footer" class="container-lg d-flex align-items-center px-3 py-2 py-md-3 border-top mt-auto">
     <div id="footer-name">
       <span class="roboto-serif-header font-size-md-14">Made by Udbhav Dalal</span>
     </div>

@@ -129,6 +129,13 @@ app.get('/api/todays-words', async (req, res) => {
     failureRedirect: '/'
   }));
 
+  app.post('/logout', function(req, res, next) {
+    req.logout(function(err) {
+      if (err) { return next(err); }
+      res.json({ message: 'Logout successful' });
+    });
+  });
+
   process.on('SIGINT', async () => {
     await pool.end();
     console.log('Pool has ended');

@@ -24,6 +24,10 @@ export class ApiService {
     );
   }
 
+  logout() {
+    return this.http.post(`${this.baseUrl}logout`, {});
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Unknown error!';
     if (error.error instanceof ErrorEvent) {
