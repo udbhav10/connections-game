@@ -108,7 +108,10 @@ app.listen(PORT, () => {
 
 app.get('/api/todays-words', async (req, res) => {
   try {  
-    const query = `SELECT * FROM connections WHERE date = CURRENT_DATE;`;
+    const query = `
+      SELECT * FROM connections
+      WHERE date = (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')::DATE;
+    `;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (error) {
