@@ -22,7 +22,7 @@ const pool = new Pool({
 passport.use(new GoogleStrategy({
   clientID: process.env['GOOGLE_CLIENT_ID'],
   clientSecret: process.env['GOOGLE_CLIENT_SECRET'],
-  callbackURL: '/oauth2/redirect/google',
+  callbackURL: `${process.env['REDIRECT_URI']}/oauth2/redirect/google`,
   scope: ['profile']
 }, async function verify(issuer, profile, cb) {
   try {
