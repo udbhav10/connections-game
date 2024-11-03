@@ -104,10 +104,10 @@
           <ng-container *ngFor="let row of groupsFound">
             <div class="row">
               <div class="col d-flex flex-column m-1 justify-content-center align-items-center text-center revealedGroup dynamic-height" [ngClass]="row['class']">
-                <div class="font-size-md-sm-22 open-sans-header">
+                <div class="font-size-md-22 open-sans-header">
                   {{ row['category'] | uppercase }}
                 </div>
-                <div class="font-size-md-sm-18 open-sans-body">
+                <div class="font-size-md-18 open-sans-body">
                   <div>
                     <ng-container *ngFor="let id of row['answers']; let i = index">
                       {{ words[id] | uppercase }}<span *ngIf="i < row['answers'].length - 1">, </span>

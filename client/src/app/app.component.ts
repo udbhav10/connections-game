@@ -68,7 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
       day: 'numeric' 
     };
     this.date = new Date().toLocaleDateString('en-US', options);
-    this.shareMessage = "Connections " + this.date + "\n\n";
+    this.shareMessage = "Connections\n" + this.date + "\n";
   }
 
   getMessage() {
@@ -129,11 +129,11 @@ export class AppComponent implements OnInit, OnDestroy {
             return 'font-variation-width-85 font-size-md-sm-16';
         }
     } else {
-        if(word?.length >= 12 && word?.length < 14) {
+        if(word?.length >= 10 && word?.length < 12) {
             return 'font-variation-width-85 font-size-md-sm-22';
-        } else if(word?.length >= 14 && word?.length < 16) {
+        } else if(word?.length >= 12 && word?.length < 14) {
             return 'font-variation-width-85 font-size-md-sm-20';
-        } else if(word?.length >= 16) {
+        } else if(word?.length >= 14) {
             return 'font-variation-width-85 font-size-md-sm-16';
         }
     }
@@ -510,11 +510,13 @@ export class AppComponent implements OnInit, OnDestroy {
     this.wordsRemainingAfterGuess(color['answers']);
     this.groupsFound.push(color);
     this.selectedWords = [];
-    this.storeData();
     if(this.groupsFound.length == 4 && this.mistakesRemaining.length > 0) {
       setTimeout(() => {
         this.gameOver('victory');
       }, 500)
+    } else if(this.mistakesRemaining.length) {
+      this.shareMessage += '\n';
+      this.storeData();
     }
   }
 
@@ -529,9 +531,12 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     await this.shake();
     this.mistakesRemaining.pop();
-    this.storeData();
-    if(this.mistakesRemaining.length == 0)
+    if(this.mistakesRemaining.length == 0) {
       await this.gameOver('loss');
+    } else {
+      this.shareMessage += '\n';
+      this.storeData();
+    }
   }
 
   async gameOver(result: string) {
@@ -589,7 +594,6 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       })
     }
-    guessPattern += "\n";
     this.shareMessage += guessPattern;
   }
 

@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const moment = require('moment-timezone');
 const path = require('path');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oidc');
@@ -151,30 +150,24 @@ app.get('/get-progress', async(req, res) => {
   }
 
   try {
-    // Get the current date in IST
-    const currentDateIST = moment().tz('Asia/Kolkata').format('YYYY-MM-DD');
 
-    // Query to fetch progress data if it exists
     const query = `
       SELECT data, attempts, result_flag, date 
       FROM user_data 
       WHERE user_id = $1
+      AND date = (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')::DATE
     `;
     const { rows } = await pool.query(query, [userId]);
     const userData = rows[0];
 
-    // Check if data exists and if the date matches today’s IST date
     if (userData) {
-      const entryDate = moment(userData.date).format('YYYY-MM-DD');
-      if (entryDate === currentDateIST) {
-        return res.json({
-          progressData: userData.data,
-          attempts: userData.attempts,
-          result_flag: userData.result_flag
-        });
-      }
+      return res.json({
+        progressData: userData.data,
+        attempts: userData.attempts,
+        result_flag: userData.result_flag
+      });
     }
-    // Return an empty object if no valid entry is found
+
     res.json({});
   } catch (error) {
     console.error('Error fetching progress data:', error);
@@ -196,7 +189,7 @@ app.post('/save-progress', async (req, res) => {
   try {
     // Check if an entry already exists for this user_id
     const existingEntry = await pool.query(
-      'SELECT id FROM user_data WHERE user_id = $1',
+      `SELECT id FROM user_data WHERE user_id = $1 AND date = (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')::DATE`,
       [userId]
     );
 
