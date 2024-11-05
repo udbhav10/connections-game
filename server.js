@@ -197,8 +197,9 @@ app.post('/save-progress', async (req, res) => {
       // Update the existing entry
       const query = `
         UPDATE user_data
-        SET data = $1, result_flag = $2, attempts = $3, date = (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')::DATE
+        SET data = $1, result_flag = $2, attempts = $3
         WHERE user_id = $4
+        AND date = (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata')::DATE
       `;
       await pool.query(query, [progressData, resultFlag, attempts, userId]);
     } else {
