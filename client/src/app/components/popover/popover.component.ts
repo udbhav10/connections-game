@@ -79,7 +79,7 @@ export class PopoverComponent implements OnInit {
     this.mistakesStats['mistakes_4'] = Number(this.mistakesDistri['mistakes_4']);
     this.mistakesStats['totalPlayed'] = Number(this.mistakesStats['wins']) + Number(this.mistakesStats['losses']);
     if(this.mistakesStats['totalPlayed']) {
-      this.mistakesStats['winPercent'] = String( Math.round(this.mistakesStats['wins'] / this.mistakesStats['totalPlayed']) * 100 ) + '%';
+      this.mistakesStats['winPercent'] = String( Math.round((this.mistakesStats['wins'] / this.mistakesStats['totalPlayed']) * 100) ) + '%';
     }
     this.chartOptions.series = [{
       type: 'bar',
