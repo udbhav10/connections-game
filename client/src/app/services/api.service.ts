@@ -43,6 +43,12 @@ export class ApiService {
     );
   }
 
+  getMistakesData() {
+    return this.http.get(`${this.baseUrl}get-mistakes`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   logout() {
     return this.http.post(`${this.baseUrl}logout`, {});
   }

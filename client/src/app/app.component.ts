@@ -4,15 +4,28 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ApiService } from './services/api.service';
 import { LayoverComponent } from './components/layover/layover.component';
+import { PopoverComponent } from './components/popover/popover.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { trigger, transition, style, animate } from '@angular/animations';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, HttpClientModule, LayoverComponent, NgbDropdownModule],
+  imports: [RouterOutlet, CommonModule, HttpClientModule, LayoverComponent, PopoverComponent, NgbDropdownModule],
   providers: [ApiService],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  animations: [
+    trigger('slide', [
+      transition(':enter', [
+        style({ top: '135%' }),
+        animate('200ms ease', style({ top: '50%' }))
+      ]),
+      transition(':leave', [
+        style({ top: '50%' }),
+        animate('200ms ease', style({ top: '135%' }))
+      ])
+    ])
+  ]
 })
 export class AppComponent implements OnInit, OnDestroy {
   date: string = '';
@@ -37,10 +50,16 @@ export class AppComponent implements OnInit, OnDestroy {
   shareMessage: string = '';
   showAlert: boolean = false;
   showLayover: boolean = true;
+  showPopover: boolean = false;
+  popoverType: string = '';
   isLoggedIn: boolean = false;
   layoverHeight: number = 0;
   attempts: number = 0;
   resultFlag: boolean | null = null;
+  mistakesDistri: any = {};
+  dataIsLoading = true;
+  greetingMessage: string = "Please log in to save your progress!";
+  buttonText: string = "Play";
   
   constructor(public _apiService: ApiService) {
     this.fetchConnections();
@@ -157,6 +176,7 @@ export class AppComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error(error);
+        this.dataIsLoading = false;
       },
       complete: () => { 
         this.fetchLoginStatus();
@@ -175,10 +195,13 @@ export class AppComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error(error);
+        this.dataIsLoading = false;
       },
       complete: () => { 
         if(this.isLoggedIn) {
           this.getData();
+        } else {
+          this.dataIsLoading = false;
         }
       }
     } );
@@ -668,7 +691,7 @@ export class AppComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         if (Object.keys(res).length > 0) {
           this.attempts = res.attempts;
-          this.resultFlag = res.result_flag;
+          this.resultFlag = res.result_flag === null ? null : Boolean(res.result_flag);
           this.groupsFound = res.progressData.groupsFound;
           this.guessesMade = res.progressData.guessesMade;
           this.isGameOver = res.progressData.isGameOver;
@@ -679,12 +702,58 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       },
       error: (error) => {
-
+        this.dataIsLoading = false;
       },
       complete: () => {
-
+        this.getMistakes();
       }
     })
+  }
+
+  getMistakes() {
+    this._apiService.getMistakesData().subscribe({
+      next: (res: any) => {
+        if (Object.keys(res).length > 0) {
+          this.mistakesDistri = res['mistakesDistri'];
+        }
+      },
+      error: (error) => {
+        this.dataIsLoading = false;
+      },
+      complete: () => {
+        this.getLayoverContent();
+        this.dataIsLoading = false;
+      }
+    })
+  }
+
+  getLayoverContent() {
+    if(this.isLoggedIn) {
+      if(this.resultFlag === null) {
+        if(this.groupsFound.length > 0 || this.mistakesRemaining.length < 4) {
+          this.greetingMessage = `You have found ${this.groupsFound.length}/4 connections!`;
+          this.buttonText = 'Continue';
+        } else {
+          this.greetingMessage = `Solve today's connections and build your streak!`;
+          this.buttonText = 'Play';
+        }
+      } else if(this.resultFlag === false) {
+        this.greetingMessage = 'Better luck next time!';
+        this.buttonText = 'Admire Puzzle';
+      } else if(this.resultFlag === true) {
+        this.greetingMessage = "Well done on solving today's connections!";
+        this.buttonText = 'Admire Puzzle';
+      }
+    } else { }
+  }
+
+  openStats() {
+    this.popoverType = 'stats';
+    this.showPopover = true;
+  }
+
+  closePopover() {
+    this.showPopover = false;
   }
   
   ngOnDestroy(): void { }

@@ -143,6 +143,38 @@ app.post('/logout', function(req, res, next) {
   });
 });
 
+app.get('/get-mistakes', async(req, res) => {
+  const userId = req.user?.id;
+  if (!userId) {
+    return res.status(401).json({ error: 'User not authenticated' });
+  }
+
+  try {
+    const mistakesQuery = `
+      SELECT
+        COUNT(*) FILTER (WHERE result_flag = 1) AS wins,
+        COUNT(*) FILTER (WHERE result_flag = 0) AS losses,
+        COUNT(*) FILTER (WHERE attempts = 4 AND result_flag = 1) AS mistakes_0,
+        COUNT(*) FILTER (WHERE attempts = 5 AND result_flag = 1) AS mistakes_1,
+        COUNT(*) FILTER (WHERE attempts = 6 AND result_flag = 1) AS mistakes_2,
+        COUNT(*) FILTER (WHERE attempts = 7 AND result_flag = 1) AS mistakes_3,
+        COUNT(*) FILTER (WHERE result_flag = 0) AS mistakes_4
+      FROM user_data
+      WHERE user_id = $1
+    `;
+    const mistakesData = await pool.query(mistakesQuery, [userId]);
+    const mistakesDistri = mistakesData.rows[0];
+    
+    return res.json({
+      mistakesDistri: mistakesDistri
+    })
+
+  } catch(error) {
+    console.error('Error fetching progress data:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+})
+
 app.get('/get-progress', async(req, res) => {
   const userId = req.user?.id;
   if (!userId) {

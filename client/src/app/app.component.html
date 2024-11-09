@@ -1,4 +1,20 @@
 <div id="main-container" class="container-fluid user-select-none main-container d-flex flex-column p-0">
+
+  <div class="overlay" *ngIf="showPopover"></div>
+
+  <ng-container *ngIf="showPopover">
+
+    <app-popover
+      [@slide]
+      class="app-popover"
+      [popoverType]="popoverType"
+      [mistakesDistri]="mistakesDistri"
+      (closeEventEmitter)="closePopover()"
+    >
+    </app-popover>
+    
+  </ng-container>
+
   <!-- Navbar -->
   <div id="navbar" class="container-lg d-flex align-items-center px-3 py-2 py-md-3 border-bottom">
     <div id="game-title">
@@ -61,7 +77,7 @@
             account_circle
           </span>
           <div ngbDropdownMenu aria-labelledby="barChartDropdown">
-            <button ngbDropdownItem>Stats - Coming Soon!</button>
+            <button ngbDropdownItem (click)="openStats()">Stats - New!</button>
             <button (click)="logout()" ngbDropdownItem>Log Out</button>
           </div>
         </div>
@@ -86,8 +102,9 @@
   
   <ng-container *ngIf="!showLayover">
 
-    <div id="content-container" class="container-lg d-flex flex-column">  
     
+    <div id="content-container" class="container-lg d-flex flex-column position-relative">  
+
       <!-- Message -->
       <div id="message" class="d-flex align-items-center justify-content-center py-3 position-relative">
         <span class="open-sans-body font-size-md-20">{{ message }}</span>
@@ -176,6 +193,9 @@
       [isLoggedIn]="isLoggedIn"
       [isGameOver]="isGameOver"
       [layoverHeight]="layoverHeight"
+      [dataIsLoading]="dataIsLoading"
+      [greetingMessage]="greetingMessage"
+      [buttonText]="buttonText"
       (playEventEmitter)="showLayover=false;"
     >
     </app-layover>

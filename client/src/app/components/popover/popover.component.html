@@ -1,0 +1,50 @@
+
+<ng-container *ngIf="popoverType == 'stats'">
+    <div class="popover d-flex flex-column p-3">
+        <div class="d-flex align-items-center justify-content-center">
+            <span (click)="closePopover()" class="font-size-md-34 material-symbols-outlined ms-auto cursor-pointer">
+                close
+            </span>
+        </div>
+
+        <div class="d-flex stats-container align-items-center justify-content-center">
+
+            <div class="d-flex flex-column align-items-center justify-content-center px-3 py-2">
+
+                <span class="font-size-md-32 open-sans-bold"> {{ this.mistakesStats['totalPlayed'] }} </span>
+                <span class="font-size-md-20 open-sans-body"> Played </span>
+
+            </div>
+
+            <div class="d-flex flex-column align-items-center justify-content-center px-3 py-2">
+
+                <span class="font-size-md-32 open-sans-bold"> {{ this.mistakesStats['wins'] }} </span>
+                <span class="font-size-md-20 open-sans-body"> Won </span>
+
+            </div>
+
+            <div class="d-flex flex-column align-items-center justify-content-center px-3 py-2">
+
+                <span class="font-size-md-32 open-sans-bold"> {{ this.mistakesStats['losses'] }} </span>
+                <span class="font-size-md-20 open-sans-body"> Lost </span>
+
+            </div>
+
+            <div class="d-flex flex-column align-items-center justify-content-center px-3 py-2">
+
+                <span class="font-size-md-32 open-sans-bold"> {{ this.mistakesStats['winPercent'] }} </span>
+                <span class="font-size-md-20 open-sans-body"> Win rate </span>
+
+            </div>
+
+        </div>
+        
+        <highcharts-chart
+            class="mt-2"
+            [Highcharts]="Highcharts"
+            [options]="chartOptions"
+            style="width: 100%; display: block;">
+        </highcharts-chart>
+    </div>
+</ng-container>
+  

@@ -1,12 +1,20 @@
 <div [style.height.px]="layoverHeight" class="container-fluid layover d-flex flex-column py-5 px-3 justify-content-center align-items-center">
-    <img src="images/connection.png" class="connections-img mb-2"> 
-    <span class="roboto-serif-header font-size-md-40 mb-1">Connections</span>
-    <span class="open-sans-body font-size-md-20 text-center mb-4">{{ isLoggedIn ? "Solve today's connections and build your streak!" : "Please log in to save your progress!" }}</span>
-    <button class="btn play-button font-size-md-24 py-2" [ngClass]="isLoggedIn ? 'mb-4' : 'mb-3'" (click)="play()">{{isGameOver ? 'Admire Puzzle' : 'Play'}}</button>
-    <div *ngIf="!isLoggedIn" class="login-button-div mb-4">
-        <a [href]="_apiService.baseUrl + 'login/federated/google'"><button class="btn login-button font-size-md-24 py-2">Log in</button></a>
-    </div>
-    <span class="open-sans-header font-size-md-18">{{ date }}</span>
-    <span class="open-sans-body font-size-md-16">By Udbhav Dalal</span>
+    <ng-container *ngIf="dataIsLoading">
+        <div class="d-flex align-items-center justify-content-center">
+            <img src="images/loader.gif" class="connections-gif px-3">
+            <span class="open-sans-body font-size-md-28"> Building connections... </span>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="!dataIsLoading">
+        <img src="images/connection.png" class="connections-img mb-2"> 
+        <span class="roboto-serif-header font-size-md-40 mb-1">Connections</span>
+        <span class="open-sans-body font-size-md-20 text-center mb-4">{{ greetingMessage }}</span>
+        <button class="btn play-button font-size-md-24 py-2" [ngClass]="isLoggedIn ? 'mb-4' : 'mb-3'" (click)="play()">{{buttonText}}</button>
+        <div *ngIf="!isLoggedIn" class="login-button-div mb-4">
+            <a [href]="_apiService.baseUrl + 'login/federated/google'"><button class="btn login-button font-size-md-24 py-2">Log in</button></a>
+        </div>
+        <span class="open-sans-header font-size-md-18">{{ date }}</span>
+        <span class="open-sans-body font-size-md-16">By Udbhav Dalal</span>
+    </ng-container>
 </div>
 
