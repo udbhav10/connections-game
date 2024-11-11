@@ -24,6 +24,18 @@ import { trigger, transition, style, animate } from '@angular/animations';
         style({ top: '50%' }),
         animate('200ms ease', style({ top: '135%' }))
       ])
+    ]),
+    trigger('colorFade', [
+      transition(':leave', [
+        animate('300ms ease', style({ color: 'red', scale: 1.2 })),
+        animate('300ms ease', style({ opacity: 0 }))
+      ])
+    ]),
+    trigger('sheenMove', [
+      transition(':enter', [
+        style({ transform: 'translateX({{startX}})' }),
+        animate('1250ms ease-in-out', style({ transform: 'translateX({{endX}})' }))
+      ], { params: { startX: '-50px', endX: '100%' } })
     ])
   ]
 })
@@ -45,6 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
   mistakesRemaining: Array<number> = [0, 0, 0, 0];
   emojis: Array<any> = [];
   isGameOver: boolean = false;
+  gameJustGotOver: boolean = false;
   guessesMade: Array<Array<number>> = [];
   alertMessage: string = '';
   shareMessage: string = '';
@@ -60,6 +73,7 @@ export class AppComponent implements OnInit, OnDestroy {
   dataIsLoading = true;
   greetingMessage: string = "Please log in to save your progress!";
   buttonText: string = "Play";
+  showSheen: boolean = false;
   
   constructor(public _apiService: ApiService) {
     this.fetchConnections();
@@ -567,6 +581,11 @@ export class AppComponent implements OnInit, OnDestroy {
       this.message = "You won!";
       this.isGameOver = true;
       this.resultFlag = true;
+      this.gameJustGotOver = true;
+      this.showSheen = true;
+      setTimeout(() => {
+        this.showSheen = false;
+      }, 1250)
     } else {
       this.selectedWords = [];
       let groupsRemaining = [this.yellow, this.green, this.blue, this.purple];
@@ -577,12 +596,13 @@ export class AppComponent implements OnInit, OnDestroy {
               groupsRemaining.splice(index, 1);
           }
       }
-      for(let group of groupsRemaining) {
+      for(let index = 0; index < groupsRemaining.length; index++) {
+        const group = groupsRemaining[index];
         this.selectedWords = group['answers'];
         await new Promise<void>((resolve) => {
           setTimeout(() => {
             resolve();
-          }, 250)
+          }, index === 0 ? 1000 : 250)
         })
         await this.correctGuess(group);
         await new Promise<void>((resolve) => {
@@ -590,6 +610,7 @@ export class AppComponent implements OnInit, OnDestroy {
             if(this.groupsFound.length == 4) {
               this.message = "Better luck next time!";
               this.isGameOver = true;
+              this.gameJustGotOver = true;
             }
             resolve();
           }, 350)
@@ -681,6 +702,11 @@ export class AppComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error saving progress data:', error);
+        },
+        complete: () => {
+          if (this.gameJustGotOver) {
+            this.getMistakes();
+          }
         }
       });  
     }

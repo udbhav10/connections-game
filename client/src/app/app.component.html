@@ -120,6 +120,11 @@
         <div class="game-grid">
           <ng-container *ngFor="let row of groupsFound">
             <div class="row">
+              <div 
+                *ngIf="showSheen" 
+                class="sheen position-fixed dynamic-height m-1" 
+                [@sheenMove]="{ value: true, params: { endX: width > 650 ? '650px' : width + 'px' } }"
+              > </div>
               <div class="col d-flex flex-column m-1 justify-content-center align-items-center text-center revealedGroup dynamic-height" [ngClass]="row['class']">
                 <div class="font-size-md-22 open-sans-header">
                   {{ row['category'] | uppercase }}
@@ -160,16 +165,18 @@
       </div>
 
       <!-- Mistakes remaining -->
-      <div id="mistakes" class="d-flex justify-content-center py-3">
-        <div class="d-flex align-items-center">
-          <span class="open-sans-body font-size-md-20 me-2">Mistakes remaining: </span>
-          <ng-container *ngFor="let item of mistakesRemaining">
-            <span class="material-symbols-outlined ms-1 font-size-md-20">
-              radio_button_unchecked
-            </span>
-          </ng-container>
-        </div>
-      </div>
+       <ng-container *ngIf="!isGameOver">
+         <div id="mistakes" class="d-flex justify-content-center py-3">
+           <div class="d-flex align-items-center">
+             <span class="open-sans-body font-size-md-20 me-2">Mistakes remaining: </span>
+             <ng-container *ngFor="let item of mistakesRemaining">
+               <span class="material-symbols-outlined mistake-circle ms-1 font-size-md-20" [@colorFade]>
+                 radio_button_unchecked
+               </span>
+             </ng-container>
+           </div>
+         </div>
+       </ng-container>
 
       <!-- Buttons -->
       <div id="buttons"  class="d-flex justify-content-center pt-2 pb-4">
@@ -179,7 +186,24 @@
           <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="submit()" [disabled]="!mistakesRemaining.length || selectedWords.length!==4">Submit</button>
         </ng-container>
         <ng-container *ngIf="isGameOver">
-          <button type="button" class="btn-md-lg game-buttons mx-1 font-size-md-24" (click)="share()">Share</button>
+          <div class="d-flex py-3">
+            <button type="button" class="btn-md-lg game-buttons mx-2 font-size-md-24" (click)="share()">
+              <div class="d-flex justify-content-center align-items-center">
+                <span class="material-symbols-outlined font-size-md-32 me-2">
+                  share
+                </span>
+                <span>Share</span>
+              </div>
+            </button>
+            <button type="button" class="btn-md-lg game-buttons mx-2 font-size-md-24" (click)="openStats()">
+                <div class="d-flex justify-content-center align-items-center">
+                  <span class="material-symbols-outlined font-size-md-32 me-2">
+                    bar_chart
+                  </span>
+                  <span>View Stats</span>
+                </div>
+            </button>
+          </div>
         </ng-container>
       </div>   
     </div>    

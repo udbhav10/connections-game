@@ -55,13 +55,26 @@ export class PopoverComponent implements OnInit {
       enabled: false,
     },
     tooltip: {
-      formatter: function () {
-        return String(this.point.y);
-      },
+      enabled: false
     },
     plotOptions: {
       series: {
         color: '#b3a7fe',
+        dataLabels: {
+          enabled: true,
+          inside: true,
+          align: 'right',
+          x: -10,
+          style: {
+            fontWeight: 'bold',
+            color: 'black',
+            fontSize: '16px',
+            textOutline: 'none'
+          },
+          formatter: function () {
+            return this.y !== 0 ? this.y : null;
+          }
+        }
       },
     },
     credits: {

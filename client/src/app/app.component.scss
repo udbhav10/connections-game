@@ -58,6 +58,11 @@
     font-variation-settings: "wdth" 85;
 }
 
+.mistake-circle {
+    color: $selectedTileBackground;
+    font-variation-settings: 'FILL' 1;
+}
+
 .game-buttons {
     border-radius: 25px;
     font-weight: 500;
@@ -167,6 +172,12 @@
     }
 }
 
+.sheen {
+    width: 50px !important;
+    z-index: 5;
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
 @keyframes bounce {
     0% {
       transform: translateY(0);
@@ -267,6 +278,6 @@
   .blink {
     animation: blink 0.5s ease;
   }
-  
+
   
   
