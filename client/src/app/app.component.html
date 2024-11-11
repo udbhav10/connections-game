@@ -195,7 +195,7 @@
                 <span>Share</span>
               </div>
             </button>
-            <button type="button" class="btn-md-lg game-buttons mx-2 font-size-md-24" (click)="openStats()">
+            <button *ngIf="isLoggedIn" type="button" class="btn-md-lg game-buttons mx-2 font-size-md-24" (click)="openStats()">
                 <div class="d-flex justify-content-center align-items-center">
                   <span class="material-symbols-outlined font-size-md-32 me-2">
                     bar_chart
