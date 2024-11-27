@@ -74,6 +74,7 @@ export class AppComponent implements OnInit, OnDestroy {
   greetingMessage: string = "Please log in to save your progress!";
   buttonText: string = "Play";
   showSheen: boolean = false;
+  isShuffling: boolean = false;
   
   constructor(public _apiService: ApiService) {
     this.fetchConnections();
@@ -283,8 +284,10 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   async shuffleAndBlink() {
+    this.isShuffling = true;
     await this.shuffle();
     await this.blink();
+    this.isShuffling = false;
   }
 
   wordsRemainingAfterGuess(color: Array<number>) {

@@ -71,13 +71,32 @@
     background-color: #fff;
 }
 
+.submit-button {
+    border-radius: 25px;
+    font-weight: 500;
+    border: 1px solid #212529;
+    color: #fff;
+    background-color: rgba(33, 37, 41); 
+}
+
 .game-buttons:active {
     color: #fff;
     background-color: #212529;   
 }
 
+.submit-button:active {
+    color: #fff;
+    background-color: rgba(33, 37, 41, 0.75);
+}
+
 .game-buttons:disabled {
     opacity: 0.5;
+}
+
+.submit-button:disabled {
+    opacity: 0.5;
+    color: #212529;
+    background-color: #fff;
 }
 
 .game-buttons:disabled:active {
