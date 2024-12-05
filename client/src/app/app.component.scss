@@ -289,13 +289,22 @@
     }
   }
 
-  @keyframes blink {
+  @keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes fadeIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
   
-  .blink {
-    animation: blink 0.5s ease;
+  .fadeOut {
+    animation: fadeOut 0.2s ease forwards;
+  }
+
+  .fadeIn {
+    animation: fadeIn 0.2s ease forwards;
   }
 
   

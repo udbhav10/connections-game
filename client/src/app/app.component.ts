@@ -75,6 +75,7 @@ export class AppComponent implements OnInit, OnDestroy {
   buttonText: string = "Play";
   showSheen: boolean = false;
   isShuffling: boolean = false;
+  alertTimeout: any = undefined;
   
   constructor(public _apiService: ApiService) {
     this.fetchConnections();
@@ -247,45 +248,38 @@ export class AppComponent implements OnInit, OnDestroy {
     return new Promise((resolve) => {
       const wordTiles = document.querySelectorAll('.wordTile span');
       wordTiles.forEach(span => {
-        span.classList.add('blink');
-        setTimeout(() => {
-          span.classList.remove('blink');
-        }, 500);
+        span.classList.add('fadeOut');
       });
       setTimeout(() => {
+        this.shuffle();
+        wordTiles.forEach(span => {
+          span.classList.add('fadeIn');
+        });
+      }, 205);
+      setTimeout(() => {
         resolve();
-      }, 500);
+      }, 410);
     })
   }
 
-  shuffle(): Promise<void> {
-
-    return new Promise((resolve) => {
-
-      const orderFlat = this.order.flat();
-      
-      for (let i = orderFlat.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [orderFlat[i], orderFlat[j]] = [orderFlat[j], orderFlat[i]];
-      }
+  shuffle(): void {
+    const orderFlat = this.order.flat();
     
-      const shuffled = [];
-      while (orderFlat.length) {
-        shuffled.push(orderFlat.splice(0, 4));
-      }
-    
-      this.order = shuffled;
-
-      setTimeout(() => {
-        resolve();
-      }, 0);
-    })
-
+    for (let i = orderFlat.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [orderFlat[i], orderFlat[j]] = [orderFlat[j], orderFlat[i]];
+    }
+  
+    const shuffled = [];
+    while (orderFlat.length) {
+      shuffled.push(orderFlat.splice(0, 4));
+    }
+  
+    this.order = shuffled;
   }
 
   async shuffleAndBlink() {
     this.isShuffling = true;
-    await this.shuffle();
     await this.blink();
     this.isShuffling = false;
   }
@@ -318,10 +312,16 @@ export class AppComponent implements OnInit, OnDestroy {
         guess.every((value, index) => value === selectedWordsMapped[index])
     )) {
       this.alertMessage = 'Already guessed';
-      this.showAlert = true;
-      setTimeout(() => {
+      if(this.alertTimeout) {
         this.showAlert = false;
-      }, 2500)
+        clearTimeout(this.alertTimeout);
+      }
+      setTimeout(() => {
+        this.showAlert = true;
+      }, 5);
+      this.alertTimeout = setTimeout(() => {
+        this.showAlert = false;
+      }, 3000)
     } else {
       this.guessesMade.push(selectedWordsMapped);
       this.modifyShareMessage(selectedWordsMapped);
@@ -564,8 +564,14 @@ export class AppComponent implements OnInit, OnDestroy {
     await this.bounce();
     if (message == 'one away') {
       this.alertMessage = 'One away';
-      this.showAlert = true;
+      if(this.alertTimeout) {
+        this.showAlert = false;
+        clearTimeout(this.alertTimeout);
+      }
       setTimeout(() => {
+        this.showAlert = true;
+      }, 5);
+      this.alertTimeout = setTimeout(() => {
         this.showAlert = false;
       }, 3000)
     }
