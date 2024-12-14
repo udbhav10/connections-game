@@ -250,6 +250,61 @@ app.post('/save-progress', async (req, res) => {
   }
 });
 
+app.get('/get-configuration', async (req, res) => {
+  const userId = req.user?.id;
+  if (!userId) {
+    return res.status(401).json({ error: 'User not authenticated' });
+  }
+  try {
+
+    const query = `
+      SELECT configuration 
+      FROM users 
+      WHERE id = $1
+    `;
+    const { rows } = await pool.query(query, [userId]);
+    const userConfig = rows[0]?.configuration;
+
+    return res.json({ configuration: userConfig });
+        
+  } catch (error) {
+    console.error('Error fetching user configuration:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.post('/save-configuration', async (req, res) => {
+  const userId = req.user?.id;
+  const configuration = req.body.configuration;
+
+  // Check if user is authenticated and configuration is provided
+  if (!userId) {
+    return res.status(401).json({ error: 'User not authenticated' });
+  }
+
+  try {
+    // Update the configuration JSON for the given user
+    const query = `
+      UPDATE users
+      SET configuration = $1
+      WHERE id = $2
+      RETURNING configuration
+    `;
+    const { rows } = await pool.query(query, [configuration, userId]);
+
+    // If update is successful, return the updated configuration
+    if (rows.length > 0) {
+      return res.json({ configuration: rows[0].configuration });
+    }
+
+    // If no rows were updated, the user may not exist
+    res.status(404).json({ error: 'User not found' });
+  } catch (error) {
+    console.error('Error saving user configuration:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 process.on('SIGINT', async () => {
   await pool.end();
   console.log('Pool has ended');

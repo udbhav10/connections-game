@@ -49,6 +49,25 @@ export class ApiService {
     );
   }
 
+  getUserConfiguration() {
+    return this.http.get(`${this.baseUrl}get-configuration`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  saveUserConfiguration(doNotShowHelpAgain: boolean) {
+    const inputParams = {
+      configuration: {
+        "doNotShowHelpAgain": doNotShowHelpAgain
+      },
+    };
+    return this.http.post(`${this.baseUrl}save-configuration`, inputParams, {
+      headers: { 'Content-Type': 'application/json' }
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   logout() {
     return this.http.post(`${this.baseUrl}logout`, {});
   }

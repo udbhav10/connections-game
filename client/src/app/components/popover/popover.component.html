@@ -1,6 +1,6 @@
 
 <ng-container *ngIf="popoverType == 'stats'">
-    <div class="popover d-flex flex-column p-3">
+    <div class="popover d-flex flex-column p-3 overflow-auto">
         <div class="d-flex align-items-center justify-content-center">
             <span (click)="closePopover()" class="font-size-md-34 material-symbols-outlined ms-auto cursor-pointer">
                 close
@@ -45,6 +45,60 @@
             [options]="chartOptions"
             style="width: 100%; display: block;">
         </highcharts-chart>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="popoverType == 'howToPlay'">
+    <div class="popover d-flex flex-column p-3">
+        <div class="d-flex align-items-center">
+            <span class="font-size-md-24 roboto-serif-header">
+                How To Play
+            </span>
+            <span (click)="closePopover()" class="font-size-md-34 material-symbols-outlined ms-auto cursor-pointer">
+                close
+            </span>
+        </div>
+        <div class="d-flex flex-column mt-3 overflow-auto">
+
+            <span class="font-size-md-20 open-sans-bold">Objective</span>
+            <div class="d-flex flex-column font-size-md-16 open-sans-body mt-1">
+                <span class="my-1">Group 16 words into 4 categories of 4 words each. Each category shares a common theme or link, and every category is assigned a color:</span>
+                <span class="my-1">🟨 Easiest</span>
+                <span class="my-1">🟩 Moderate</span>
+                <span class="my-1">🟦 Challenging</span>
+                <span class="my-1">🟪 Most difficlit</span>
+            </div>
+
+            <!-- Gameplay -->
+            <span class="font-size-md-20 open-sans-bold mt-3">Gameplay</span>
+            <div class="d-flex flex-column font-size-md-16 open-sans-body mt-1">
+                <span class="my-1">1. <b>Start the Game:</b> A grid of 16 words will appear on the screen.</span>
+                <span class="my-1">2. <b>Make a Guess:</b> Select 4 words from the grid that you think belong to the same category and hit the <b>Submit</b> button.</span>
+                <span class="my-1">3. <b>Feedback on Your Guess:</b></span>
+                <ul class="pl-3 mb-0">
+                    <li class="my-1">If your guess is correct, the 4 words will form a group, disappear from the grid, and reveal the category color.</li>
+                    <li class="my-1">If your guess is wrong, the word tiles will <b>shake</b>, and no group will be formed.</li>
+                    <li class="my-1">If you see <b>"One away"</b>, 3 of the 4 words you selected are correct. Swap the incorrect word and try again.</li>
+                    <li class="my-1">If you see <b>"Already guessed"</b>, you’ve already made this guess. Pick a new combination.</li>
+                </ul>
+                <span class="my-1">4. <b>Limited Chances:</b> You have 4 wrong guesses before the game solves itself automatically. Aim to complete all groups within this limit.</span>
+                <span class="my-1">5. <b>Game Completion:</b> Once all 4 groups are formed, the game ends, and you can see the categories and their themes.</span>
+            </div>
+
+        </div>
+
+        <!-- Don't show again -->
+        <div class="d-flex mt-3">
+            <input class="me-1 cursor-pointer" type="checkbox" [(ngModel)]="doNotShowHelpAgain">
+            <span class="open-sans-body font-size-md-16">Don't show again</span>
+        </div>
+
+        <!-- Buttons -->
+        <div class="mt-2 d-flex justify-content-center">
+            <button type="button" class="px-2 py-1 popover-button font-size-md-20" (click)="startTour()">
+                Start Tour
+            </button>
+        </div>
     </div>
 </ng-container>
   

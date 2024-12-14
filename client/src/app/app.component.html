@@ -9,7 +9,8 @@
       class="app-popover"
       [popoverType]="popoverType"
       [mistakesDistri]="mistakesDistri"
-      (closeEventEmitter)="closePopover()"
+      [doNotShowHelpAgain]="doNotShowHelpAgain ?? false"
+      (closeEventEmitter)="closePopover($event)"
     >
     </app-popover>
     
@@ -28,13 +29,15 @@
     </div>
     <div class="icons-group d-flex ms-auto align-items-center">
       <span
-        #iconBulb 
+        #iconBulb
+        id="iconBulb" 
         class="material-symbols-outlined me-1 p-1 font-size-md-34 cursor-pointer" 
         (touchstart)="setActiveTouch(iconBulb)"
         (mouseenter)="setActiveMouse(iconBulb)"
         (mouseleave)="removeActiveMouse(iconBulb)"
         (touchend)="removeActiveTouch(iconBulb)"
         (touchcancel)="removeActiveTouch(iconBulb)"
+        (click)="revealHint()"
       >
         lightbulb
       </span> 
@@ -46,11 +49,13 @@
         (mouseleave)="removeActiveMouse(iconHelp)"
         (touchend)="removeActiveTouch(iconHelp)"
         (touchcancel)="removeActiveTouch(iconHelp)"
+        (click)="openHowToPlay()"
       >
         help
       </span>
       <span
-        #iconSettings 
+        #iconSettings
+        id="iconSettings" 
         class="material-symbols-outlined ms-1 me-1 p-1 font-size-md-34 cursor-pointer"
         (touchstart)="setActiveTouch(iconSettings)"
         (mouseenter)="setActiveMouse(iconSettings)"
@@ -63,7 +68,7 @@
       <ng-container *ngIf="isLoggedIn; else login">
         <div class="d-flex" ngbDropdown>
           <span
-            #iconAcc 
+            #iconAcc
             class="material-symbols-outlined ms-1 p-1 font-size-md-34 cursor-pointer" 
             id="barChartDropdown" 
             data-no-icon="true"
@@ -86,6 +91,7 @@
         <a class="d-flex text-decoration-none" style="color: black;" [href]="_apiService.baseUrl + 'login/federated/google'">
           <span
             #iconLogin 
+            id="iconLogin"
             class="material-symbols-outlined ms-1 p-1 font-size-md-34 cursor-pointer"
             (touchstart)="setActiveTouch(iconLogin)"
             (mouseenter)="setActiveMouse(iconLogin)"
@@ -119,7 +125,7 @@
       <div id="game" class="d-flex justify-content-center">
         <div class="game-grid">
           <ng-container *ngFor="let row of groupsFound">
-            <div class="row">
+            <div [id]="'group-'+ row['class']" class="row">
               <div 
                 *ngIf="showSheen" 
                 class="sheen position-fixed dynamic-height m-1" 
@@ -220,7 +226,7 @@
       [dataIsLoading]="dataIsLoading"
       [greetingMessage]="greetingMessage"
       [buttonText]="buttonText"
-      (playEventEmitter)="showLayover=false;"
+      (playEventEmitter)="play()"
     >
     </app-layover>
     
@@ -231,7 +237,7 @@
     <div id="footer-name">
       <span class="roboto-serif-header font-size-md-16">Made by Udbhav Dalal</span>
     </div>
-    <div class="icons-group d-flex ms-auto">
+    <div id="socials" class="icons-group d-flex ms-auto">
       <a href="https://www.instagram.com/udbhavdalal/" target="_blank"><i class="fa-brands fa-instagram me-3 cursor-pointer"></i></a>
       <a href="mailto:udbhavdalal062001@gmail.com" target="_blank"><i class="fa-regular fa-envelope ms-2 me-3 cursor-pointer"></i></a>
       <a href="https://x.com/UdbhavDalal" target="_blank"><i class="fa-brands fa-twitter ms-2 cursor-pointer"></i></a>

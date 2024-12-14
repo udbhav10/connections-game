@@ -1,12 +1,14 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Event, RouterOutlet } from '@angular/router';
 import { ApiService } from './services/api.service';
 import { LayoverComponent } from './components/layover/layover.component';
 import { PopoverComponent } from './components/popover/popover.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { ShepherdService } from 'angular-shepherd';
+import { tourSteps, defaultStepOptions, loginStep, accountStep } from './models/tour-data';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -39,7 +41,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
     ])
   ]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   date: string = '';
   message: string = '';
   isMobile: boolean = false;
@@ -76,10 +78,11 @@ export class AppComponent implements OnInit, OnDestroy {
   showSheen: boolean = false;
   isShuffling: boolean = false;
   alertTimeout: any = undefined;
+  doNotShowHelpAgain: boolean | null = null;
   
-  constructor(public _apiService: ApiService) {
-    this.fetchConnections();
+  constructor(public _apiService: ApiService, private shepherdService: ShepherdService) {
     this.fetchTodayDate();
+    this.fetchConnections();
     this.getMessage();
     this.detectDevice();
   }
@@ -89,6 +92,12 @@ export class AppComponent implements OnInit, OnDestroy {
       this.getLayoverHeight();
     }, 10)
    }
+
+  ngAfterViewInit(): void {
+    this.shepherdService.defaultStepOptions = defaultStepOptions;
+    this.shepherdService.modal = true;
+    this.shepherdService.confirmCancel = false;
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
@@ -213,10 +222,26 @@ export class AppComponent implements OnInit, OnDestroy {
         console.error(error);
         this.dataIsLoading = false;
       },
-      complete: () => { 
+      complete: () => {
+        this.addStepsToTour();
+        const sessionData = this.getCookie('gameProgress');
+        const configuration = this.getCookie('configuration');
         if(this.isLoggedIn) {
-          this.getData();
+          this.getData(sessionData);
         } else {
+          if(sessionData) {
+            this.getSessionData(sessionData);
+          }
+          if (configuration) {
+            try {
+              const configObj = JSON.parse(configuration);
+              if (configObj && configObj.doNotShowHelpAgain !== undefined) {
+                this.doNotShowHelpAgain = configObj.doNotShowHelpAgain;
+              }
+            } catch (err) {
+              console.error('Error parsing configuration cookie:', err);
+            }
+          }
           this.dataIsLoading = false;
         }
       }
@@ -226,6 +251,7 @@ export class AppComponent implements OnInit, OnDestroy {
   logout() {
     this._apiService.logout().subscribe({
       next: (res) => {
+        document.cookie = "gameProgress=; path=/;";
         window.location.reload();
       },
       error: (error) => {
@@ -521,6 +547,20 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  async growAndShrink(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const lastRevealedGroup = this.groupsFound[this.groupsFound.length - 1]['class'];
+        const groupId = 'group-' + lastRevealedGroup;
+        const element = document.getElementById(groupId);
+        element?.classList.add('growAndShrink');
+      }, 10);
+      setTimeout(() => {
+        resolve();
+      }, 510);
+    })
+  }
+
   getAnimationOrder() {
     let animationOrder: Array<number> = [];
     const orderFlat = this.order.flat();
@@ -549,6 +589,7 @@ export class AppComponent implements OnInit, OnDestroy {
     await this.slide();
     this.wordsRemainingAfterGuess(color['answers']);
     this.groupsFound.push(color);
+    await this.growAndShrink();
     this.selectedWords = [];
     if(this.groupsFound.length == 4 && this.mistakesRemaining.length > 0) {
       setTimeout(() => {
@@ -630,6 +671,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.storeData();
   }
 
+  revealHint() {
+
+  }
+
   modifyShareMessage(guess: Array<String>) {
     let guessPattern = "";
     for(let word of guess) {
@@ -692,19 +737,27 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   storeData() {
+
+    const progressData = {
+      groupsFound: this.groupsFound,
+      mistakesRemaining: this.mistakesRemaining,
+      isGameOver: this.isGameOver,
+      guessesMade: this.guessesMade,
+      shareMessage: this.shareMessage,
+      message: this.message,
+      order: this.order
+    };
+    const attempts = this.attempts;
+    const resultFlag = this.resultFlag;
+    const todayDate = this.date;
+
+    const sessionData = { progressData, attempts, resultFlag, todayDate };
+    const cookieValue = encodeURIComponent(JSON.stringify(sessionData));
+
+    document.cookie = `gameProgress=${cookieValue}; path=/;`;
+
     if(this.isLoggedIn) {
       
-      const progressData = {
-        groupsFound: this.groupsFound,
-        mistakesRemaining: this.mistakesRemaining,
-        isGameOver: this.isGameOver,
-        guessesMade: this.guessesMade,
-        shareMessage: this.shareMessage,
-        message: this.message,
-        order: this.order
-      };
-      const attempts = this.attempts;
-      const resultFlag = this.resultFlag;
       this._apiService.saveProgressData(progressData, attempts, resultFlag).subscribe({
         next: (response) => {
           console.log('Progress data saved:', response);
@@ -717,11 +770,47 @@ export class AppComponent implements OnInit, OnDestroy {
             this.getMistakes();
           }
         }
-      });  
+      }); 
+
     }
   }
 
-  getData() {
+  getSessionData(sessionData: any) {
+
+      try {
+        const { progressData, attempts, resultFlag, todayDate } = JSON.parse(sessionData);
+
+        if (todayDate !== this.date) {
+
+          document.cookie = "gameData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          // console.log('Cookie destroyed as the date does not match.');
+          return;
+      }
+  
+        this.attempts = attempts;
+        this.resultFlag = resultFlag === null ? null : Boolean(resultFlag);
+        this.groupsFound = progressData.groupsFound;
+        this.guessesMade = progressData.guessesMade;
+        this.isGameOver = progressData.isGameOver;
+        this.message = progressData.message;
+        this.mistakesRemaining = progressData.mistakesRemaining;
+        this.order = progressData.order;
+        this.shareMessage = progressData.shareMessage;
+
+        this.getLayoverContent();
+
+      } catch (e) {
+        console.error('Error parsing session storage data:', e);
+      }
+    
+  }
+  
+  getCookie(name: string): string | null {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? decodeURIComponent(match[2]) : null;
+  }
+
+  getData(sessionData: any) {
     this._apiService.getProgressData().subscribe({
       next: (res: any) => {
         if (Object.keys(res).length > 0) {
@@ -734,13 +823,23 @@ export class AppComponent implements OnInit, OnDestroy {
           this.mistakesRemaining = res.progressData.mistakesRemaining;
           this.order = res.progressData.order;
           this.shareMessage = res.progressData.shareMessage;
+        } else {
+          if(sessionData) {
+            this.getSessionData(sessionData);
+            this.storeData();
+          }
         }
       },
       error: (error) => {
+        if(sessionData) {
+          this.getSessionData(sessionData);
+          this.storeData();
+        }
         this.dataIsLoading = false;
       },
       complete: () => {
         this.getMistakes();
+        this.getLayoverContent();
       }
     })
   }
@@ -753,42 +852,117 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       },
       error: (error) => {
+        console.error('Error getting mistakes data:', error);
         this.dataIsLoading = false;
       },
       complete: () => {
-        this.getLayoverContent();
+        this.getConfiguration();
+      }
+    })
+  }
+
+  getConfiguration() {
+    this._apiService.getUserConfiguration().subscribe({
+      next: (res: any) => {
+        if(res['configuration']['doNotShowHelpAgain']) {
+          this.doNotShowHelpAgain = res['configuration']['doNotShowHelpAgain'];
+        }
+      },
+      error: (error) => {
+        console.error('Error getting user configuration:', error);
+      },
+      complete: () => {
         this.dataIsLoading = false;
       }
     })
   }
 
-  getLayoverContent() {
+  saveConfiguration() {
     if(this.isLoggedIn) {
-      if(this.resultFlag === null) {
-        if(this.groupsFound.length > 0 || this.mistakesRemaining.length < 4) {
-          this.greetingMessage = `You have found ${this.groupsFound.length}/4 connections!`;
-          this.buttonText = 'Continue';
-        } else {
-          this.greetingMessage = `Solve today's connections and build your streak!`;
-          this.buttonText = 'Play';
+      
+      this._apiService.saveUserConfiguration(this.doNotShowHelpAgain ?? false).subscribe({
+        next: (response) => {
+          console.log('User config saved:', response);
+        },
+        error: (error) => {
+          console.error('Error saving user config:', error);
+        },
+        complete: () => {
+          
         }
-      } else if(this.resultFlag === false) {
-        this.greetingMessage = 'Better luck next time!';
-        this.buttonText = 'Admire Puzzle';
-      } else if(this.resultFlag === true) {
-        this.greetingMessage = "Well done on solving today's connections!";
-        this.buttonText = 'Admire Puzzle';
+      }); 
+
+    }
+  }
+
+  getLayoverContent() {
+    const loginPrompt = this.isLoggedIn ? "" : " Please log in to save your progress.";
+    if(this.resultFlag === null) {
+      if(this.groupsFound.length > 0 || this.mistakesRemaining.length < 4) {
+        this.greetingMessage = `You have found ${this.groupsFound.length}/4 connections!`;
+        this.buttonText = 'Continue';
+      } else {
+        this.greetingMessage = `Solve today's connections and build your streak!`;
+        this.buttonText = 'Play';
       }
-    } else { }
+    } else if(this.resultFlag === false) {
+      this.greetingMessage = 'Better luck next time!';
+      this.buttonText = 'Admire Puzzle';
+    } else if(this.resultFlag === true) {
+      this.greetingMessage = "Well done on solving today's connections!";
+      this.buttonText = 'Admire Puzzle';
+    }
+    this.greetingMessage += loginPrompt;
   }
 
   openStats() {
     this.popoverType = 'stats';
     this.showPopover = true;
   }
+  
+  openHowToPlay() {    
+    this.popoverType = 'howToPlay';
+    this.showPopover = true;
+  }
 
-  closePopover() {
+  play() {
+    this.showLayover = false;
+    if ( !this.doNotShowHelpAgain ) {
+      setTimeout(() => {
+        this.openHowToPlay();
+      }, 500);
+    }
+  }
+
+  closePopover(event: any) {
+    if(event.hasOwnProperty('doNotShowHelpAgain')) {
+      if(this.doNotShowHelpAgain !== event['doNotShowHelpAgain']) {
+        this.doNotShowHelpAgain = event['doNotShowHelpAgain'];
+        if(this.isLoggedIn) {
+          this.saveConfiguration();
+        } else {
+          const configuration = {
+            "doNotShowHelpAgain": this.doNotShowHelpAgain
+          };
+          const expiryDate = new Date();
+          expiryDate.setMonth(expiryDate.getMonth() + 1);
+          document.cookie = `configuration=${JSON.stringify(configuration)}; path=/; expires=${expiryDate.toUTCString()};`;
+        }
+      }
+    }
+    if(event.hasOwnProperty('startTour')) {
+      this.shepherdService.start();
+    }
     this.showPopover = false;
+  }
+
+  addStepsToTour() {
+    if(this.isLoggedIn) {
+      tourSteps.push(accountStep);
+    } else {
+      tourSteps.push(loginStep);
+    }
+    this.shepherdService.addSteps(tourSteps);
   }
   
   ngOnDestroy(): void { }

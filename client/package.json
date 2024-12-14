@@ -20,6 +20,7 @@
     "@angular/router": "^18.2.0",
     "@ng-bootstrap/ng-bootstrap": "^17.0.1",
     "@popperjs/core": "^2.11.8",
+    "angular-shepherd": "^18.0.2",
     "bootstrap": "^5.3.3",
     "highcharts": "^11.4.8",
     "highcharts-angular": "^4.0.1",

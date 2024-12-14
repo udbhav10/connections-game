@@ -2,20 +2,22 @@ import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as Highcharts from 'highcharts';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-popover',
   standalone: true,
-  imports: [HighchartsChartModule, CommonModule],
+  imports: [HighchartsChartModule, CommonModule, FormsModule],
   templateUrl: './popover.component.html',
   styleUrl: './popover.component.scss'
 })
 export class PopoverComponent implements OnInit {
 
   Highcharts = Highcharts;
-  @Output() closeEventEmitter: EventEmitter<void> = new EventEmitter();
+  @Output() closeEventEmitter: EventEmitter<any> = new EventEmitter();
   @Input('popoverType') popoverType: string = 'stats';
   @Input('mistakesDistri') mistakesDistri: any = {};
+  @Input() doNotShowHelpAgain: boolean = false;
   mistakesStats: any = {
     "wins": 0,
     "losses": 0,
@@ -102,6 +104,19 @@ export class PopoverComponent implements OnInit {
   }
 
   closePopover() {
-    this.closeEventEmitter.emit();
+    if(this.popoverType == 'howToPlay') {
+      this.closeEventEmitter.emit({
+        doNotShowHelpAgain: this.doNotShowHelpAgain
+      });
+    } else {
+      this.closeEventEmitter.emit();
+    }
+  }
+
+  startTour() {
+    this.closeEventEmitter.emit({
+      doNotShowHelpAgain: this.doNotShowHelpAgain,
+      startTour: true
+    });
   }
 }
