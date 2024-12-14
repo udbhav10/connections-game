@@ -111,7 +111,7 @@ export const accountStep =
 
 export const defaultStepOptions = {
     classes: 'custom-shepherd-class', // Custom styling for all steps
-    scrollTo: true, // Automatically scroll to the element
+    scrollTo: false, // Automatically scroll to the element
     arrow: true, // Show the arrow
     popperOptions: {
         modifiers: [
