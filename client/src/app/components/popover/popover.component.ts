@@ -109,7 +109,7 @@ export class PopoverComponent implements OnInit {
         doNotShowHelpAgain: this.doNotShowHelpAgain
       });
     } else {
-      this.closeEventEmitter.emit();
+      this.closeEventEmitter.emit({});
     }
   }
 
