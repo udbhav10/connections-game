@@ -754,7 +754,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     const sessionData = { progressData, attempts, resultFlag, todayDate };
     const cookieValue = encodeURIComponent(JSON.stringify(sessionData));
 
-    document.cookie = `gameProgress=${cookieValue}; path=/;`;
+    const now = new Date();
+    const expireTime = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+    document.cookie = `gameProgress=${cookieValue}; path=/; expires=${expireTime.toUTCString()};`;
 
     if(this.isLoggedIn) {
       
@@ -782,7 +785,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (todayDate !== this.date) {
 
-          document.cookie = "gameData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.cookie = "gameProgress=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           // console.log('Cookie destroyed as the date does not match.');
           return;
       }
