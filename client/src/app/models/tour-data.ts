@@ -11,11 +11,6 @@ export const tourSteps: any =
             classes: 'mt-3',
             buttons: [
                 {
-                    classes: 'shepherd-button-secondary',
-                    text: 'Exit',
-                    type: 'cancel'
-                },
-                {
                     classes: 'shepherd-button-primary',
                     text: 'Next',
                     type: 'next'
@@ -34,11 +29,6 @@ export const tourSteps: any =
             buttons: [
                 {
                     classes: 'shepherd-button-secondary',
-                    text: 'Exit',
-                    type: 'cancel'
-                },
-                {
-                    classes: 'shepherd-button-primary',
                     text: 'Back',
                     type: 'back'
                 },
@@ -64,11 +54,6 @@ export const loginStep =
         buttons: [
             {
                 classes: 'shepherd-button-secondary',
-                text: 'Exit',
-                type: 'cancel'
-            },
-            {
-                classes: 'shepherd-button-primary',
                 text: 'Back',
                 type: 'back'
             },
@@ -93,11 +78,6 @@ export const accountStep =
         buttons: [
             {
                 classes: 'shepherd-button-secondary',
-                text: 'Exit',
-                type: 'cancel'
-            },
-            {
-                classes: 'shepherd-button-primary',
                 text: 'Back',
                 type: 'back'
             },
@@ -112,7 +92,10 @@ export const accountStep =
 export const defaultStepOptions = {
     classes: 'custom-shepherd-class', // Custom styling for all steps
     scrollTo: false, // Automatically scroll to the element
-    arrow: true, // Show the arrow
+    arrow: true, // Show the arrow,
+    cancelIcon: {
+        enabled: true, // Enable a default close (X) icon for the popup
+    },
     popperOptions: {
         modifiers: [
         {
@@ -121,4 +104,4 @@ export const defaultStepOptions = {
         },
         ],
     },
-    };
+};

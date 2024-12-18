@@ -29,8 +29,7 @@ import { tourSteps, defaultStepOptions, loginStep, accountStep } from './models/
     ]),
     trigger('colorFade', [
       transition(':leave', [
-        animate('300ms ease', style({ color: 'red', scale: 1.2 })),
-        animate('300ms ease', style({ opacity: 0 }))
+        animate('600ms ease', style({ 'font-variation-settings': "'FILL' 0" }))
       ])
     ]),
     trigger('sheenMove', [
@@ -57,6 +56,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   width: number = window.innerWidth;
   groupsFound: any = [];
   mistakesRemaining: Array<number> = [0, 0, 0, 0];
+  mistakesMade: Array<number> = [];
   emojis: Array<any> = [];
   isGameOver: boolean = false;
   gameJustGotOver: boolean = false;
@@ -83,7 +83,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(public _apiService: ApiService, private shepherdService: ShepherdService) {
     this.fetchTodayDate();
     this.fetchConnections();
-    this.getMessage();
     this.detectDevice();
   }
 
@@ -115,10 +114,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.shareMessage = "Connections\n" + this.date + "\n";
   }
 
-  getMessage() {
-    this.message = "Create four groups of four!";
-  }
-
   detectDevice() {
     const width = window.innerWidth;
     this.isMobile = width < 577;
@@ -134,50 +129,55 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   adjustFontSizeAndWidth(word: string): string {
+    var maxWordLength = word.length;
+    if(word.includes(" ")) {
+      const subWords = word.split(" ");
+      maxWordLength = subWords.reduce((max, subWord) => Math.max(max, subWord.length), 0);
+    }
     if(this.width < 350) {
-        if(word?.length == 8) {
+        if(maxWordLength == 8) {
           return 'font-variation-width-85 font-size-md-sm-22';
-        } else if(word?.length == 9) {
+        } else if(maxWordLength == 9) {
             return 'font-variation-width-85 font-size-md-sm-20';
-        } else if(word?.length == 10) {
+        } else if(maxWordLength == 10) {
             return 'font-variation-width-85 font-size-md-sm-18';
-        } else if(word?.length > 10) {
+        } else if(maxWordLength > 10) {
             return 'font-variation-width-85 font-size-md-sm-16';
         } 
     } else if(this.width < 370) {
-        if(word?.length == 8) {
+        if(maxWordLength == 8) {
           return 'font-variation-width-85 font-size-md-sm-22';
-        } else if(word?.length == 9) {
+        } else if(maxWordLength == 9) {
             return 'font-variation-width-85 font-size-md-sm-20';
-        } else if(word?.length == 10) {
+        } else if(maxWordLength == 10) {
             return 'font-variation-width-85 font-size-md-sm-18';
-        } else if(word?.length > 10) {
+        } else if(maxWordLength > 10) {
             return 'font-variation-width-85 font-size-md-sm-16';
         } 
     } else if (this.isMobile) {
-        if(word?.length >= 8 && word?.length <= 9) {
+        if(maxWordLength >= 8 && maxWordLength <= 9) {
             return 'font-variation-width-85 font-size-md-sm-22';
-        } else if(word?.length == 10) {
+        } else if(maxWordLength == 10) {
             return 'font-variation-width-85 font-size-md-sm-20';
-        } else if(word?.length == 11) {
+        } else if(maxWordLength == 11) {
             return 'font-variation-width-85 font-size-md-sm-18';
-        } else if(word?.length > 11) {
+        } else if(maxWordLength > 11) {
             return 'font-variation-width-85 font-size-md-sm-17';
         }     
     } else if(this.isTablet) {
-        if(word?.length >= 13 && word?.length <= 14) {
+        if(maxWordLength >= 13 && maxWordLength <= 14) {
             return 'font-variation-width-85 font-size-md-sm-22';
-        } else if(word?.length > 14 && word?.length <= 16) {
+        } else if(maxWordLength > 14 && maxWordLength <= 16) {
             return 'font-variation-width-85 font-size-md-sm-20';
-        } else if(word?.length > 16) {
+        } else if(maxWordLength > 16) {
             return 'font-variation-width-85 font-size-md-sm-16';
         }
     } else {
-        if(word?.length >= 10 && word?.length < 12) {
+        if(maxWordLength >= 10 && maxWordLength < 12) {
             return 'font-variation-width-85 font-size-md-sm-22';
-        } else if(word?.length >= 12 && word?.length < 14) {
+        } else if(maxWordLength >= 12 && maxWordLength < 14) {
             return 'font-variation-width-85 font-size-md-sm-20';
-        } else if(word?.length >= 14) {
+        } else if(maxWordLength >= 14) {
             return 'font-variation-width-85 font-size-md-sm-16';
         }
     }
@@ -195,6 +195,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           this.green = this.apiResponse['value']['green'];
           this.blue = this.apiResponse['value']['blue'];
           this.purple = this.apiResponse['value']['purple'];
+          this.message =  this.apiResponse['value']['greetingMessage'] || "Create four groups of four!";
         } catch(err) {
 
         }
@@ -231,6 +232,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           if(sessionData) {
             this.getSessionData(sessionData);
+            this.mistakesMade = new Array(4 - this.mistakesRemaining.length).fill(0);
           }
           if (configuration) {
             try {
@@ -618,6 +620,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     await this.shake();
     this.mistakesRemaining.pop();
+    setTimeout(() => {
+      this.mistakesMade.push(0);
+    }, 600);
     if(this.mistakesRemaining.length == 0) {
       await this.gameOver('loss');
     } else {
@@ -841,6 +846,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dataIsLoading = false;
       },
       complete: () => {
+        this.mistakesMade = new Array(4 - this.mistakesRemaining.length).fill(0);
         this.getMistakes();
         this.getLayoverContent();
       }

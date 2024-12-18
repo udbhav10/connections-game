@@ -115,8 +115,8 @@
       <div id="message" class="d-flex align-items-center justify-content-center py-3 position-relative">
         <span class="open-sans-body font-size-md-22">{{ message }}</span>
         <ng-container *ngIf="showAlert">
-          <div id="alert" class="alert">
-            <span class="open-sans-body font-size-md-sm-20">{{ alertMessage }}</span>
+          <div id="alert" class="alert py-2 w-20-p">
+            <span class="open-sans-body font-size-md-sm-24">{{ alertMessage }}</span>
           </div>
         </ng-container>
       </div>
@@ -176,8 +176,13 @@
            <div class="d-flex align-items-center">
              <span class="open-sans-body font-size-md-22 me-2">Mistakes remaining: </span>
              <ng-container *ngFor="let item of mistakesRemaining">
-               <span class="material-symbols-outlined mistake-circle ms-1 font-size-md-26" [@colorFade]>
-                 radio_button_unchecked
+               <span class="material-symbols-outlined mistake-circle-fill ms-1 font-size-md-26" [@colorFade]>
+                 circle
+               </span>
+             </ng-container>
+             <ng-container *ngFor="let item of mistakesMade">
+               <span class="material-symbols-outlined mistake-circle ms-1 font-size-md-26">
+                 circle
                </span>
              </ng-container>
            </div>
