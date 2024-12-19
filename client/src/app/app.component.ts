@@ -941,7 +941,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       const mistakeCircles = document.querySelectorAll('.mistake-circle-fill');
       for(let i = 0; i < (4 - this.mistakesRemaining.length); i++) {
         mistakeCircles[3 - i].classList.remove('mistake-circle-fill');
-        mistakeCircles[3 - i].classList.remove('mistake-circle');
+        mistakeCircles[3 - i].classList.add('mistake-circle');
       }
     }, 10);
     if ( !this.doNotShowHelpAgain ) {
