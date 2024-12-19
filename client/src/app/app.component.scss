@@ -320,5 +320,14 @@
     animation: growAndShrink 0.5s ease;
   }
 
+  @keyframes fadeFill {
+    0% { font-variation-settings: 'FILL' 1; }
+    100% { font-variation-settings: 'FILL' 0; }
+  }
+
+  .fadeFill {
+    animation: fadeFill 0.5s ease forwards;
+  }
+
   
   

@@ -175,13 +175,10 @@
          <div id="mistakes" class="d-flex justify-content-center py-3">
            <div class="d-flex align-items-center">
              <span class="open-sans-body font-size-md-22 me-2">Mistakes remaining: </span>
-             <ng-container *ngFor="let item of mistakesRemaining">
-               <span class="material-symbols-outlined mistake-circle-fill ms-1 font-size-md-26" [@colorFade]>
-                 circle
-               </span>
-             </ng-container>
-             <ng-container *ngFor="let item of mistakesMade">
-               <span class="material-symbols-outlined mistake-circle ms-1 font-size-md-26">
+             <ng-container *ngFor="let item of allocatedMistakes; index as i">
+               <span 
+                  class="material-symbols-outlined mistake-circle-fill ms-1 font-size-md-26"
+                >
                  circle
                </span>
              </ng-container>

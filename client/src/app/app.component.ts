@@ -27,11 +27,6 @@ import { tourSteps, defaultStepOptions, loginStep, accountStep } from './models/
         animate('200ms ease', style({ top: '135%' }))
       ])
     ]),
-    trigger('colorFade', [
-      transition(':leave', [
-        animate('600ms ease', style({ 'font-variation-settings': "'FILL' 0" }))
-      ])
-    ]),
     trigger('sheenMove', [
       transition(':enter', [
         style({ transform: 'translateX({{startX}})' }),
@@ -56,7 +51,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   width: number = window.innerWidth;
   groupsFound: any = [];
   mistakesRemaining: Array<number> = [0, 0, 0, 0];
-  mistakesMade: Array<number> = [];
+  allocatedMistakes: Array<number> = [0, 0, 0, 0];
   emojis: Array<any> = [];
   isGameOver: boolean = false;
   gameJustGotOver: boolean = false;
@@ -232,7 +227,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           if(sessionData) {
             this.getSessionData(sessionData);
-            this.mistakesMade = new Array(4 - this.mistakesRemaining.length).fill(0);
           }
           if (configuration) {
             try {
@@ -563,6 +557,16 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
+  async fadeMistakeCircles(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const mistakeCircles = document.querySelectorAll('.mistake-circle-fill');
+      mistakeCircles[this.mistakesRemaining.length].classList.add('fadeFill');
+      setTimeout(() => {
+        resolve();
+      }, 500);
+    })
+  }
+
   getAnimationOrder() {
     let animationOrder: Array<number> = [];
     const orderFlat = this.order.flat();
@@ -620,9 +624,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     await this.shake();
     this.mistakesRemaining.pop();
-    setTimeout(() => {
-      this.mistakesMade.push(0);
-    }, 600);
+    this.fadeMistakeCircles();
     if(this.mistakesRemaining.length == 0) {
       await this.gameOver('loss');
     } else {
@@ -846,7 +848,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dataIsLoading = false;
       },
       complete: () => {
-        this.mistakesMade = new Array(4 - this.mistakesRemaining.length).fill(0);
         this.getMistakes();
         this.getLayoverContent();
       }
@@ -936,6 +937,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   play() {
     this.showLayover = false;
+    setTimeout(() => {
+      const mistakeCircles = document.querySelectorAll('.mistake-circle-fill');
+      for(let i = 0; i < (4 - this.mistakesRemaining.length); i++) {
+        mistakeCircles[3 - i].classList.remove('mistake-circle-fill');
+        mistakeCircles[3 - i].classList.remove('mistake-circle');
+      }
+    }, 10);
     if ( !this.doNotShowHelpAgain ) {
       setTimeout(() => {
         this.openHowToPlay();
