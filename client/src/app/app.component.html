@@ -28,19 +28,26 @@
       </ng-template>
     </div>
     <div class="icons-group d-flex ms-auto align-items-center">
-      <span
-        #iconBulb
-        id="iconBulb" 
-        class="material-symbols-outlined me-1 p-1 font-size-md-34 cursor-pointer" 
-        (touchstart)="setActiveTouch(iconBulb)"
-        (mouseenter)="setActiveMouse(iconBulb)"
-        (mouseleave)="removeActiveMouse(iconBulb)"
-        (touchend)="removeActiveTouch(iconBulb)"
-        (touchcancel)="removeActiveTouch(iconBulb)"
-        (click)="revealHint()"
-      >
-        lightbulb
-      </span> 
+      <div class="d-flex" ngbDropdown>        
+        <span
+          #iconBulb
+          id="iconBulb"
+          data-no-icon="true"
+          class="material-symbols-outlined me-1 p-1 font-size-md-34 cursor-pointer"
+          [ngClass]="showHint ? 'hintRevealed' : ''" 
+          (touchstart)="setActiveTouch(iconBulb)"
+          (mouseenter)="setActiveMouse(iconBulb)"
+          (mouseleave)="removeActiveMouse(iconBulb)"
+          (touchend)="removeActiveTouch(iconBulb)"
+          (touchcancel)="removeActiveTouch(iconBulb)"
+          ngbDropdownToggle
+        >
+          lightbulb
+        </span>
+        <div ngbDropdownMenu aria-labelledby="iconBulb">
+          <button ngbDropdownItem (click)="toggleHint()">{{ showHint ? 'Hide Hint' : 'Reveal Hint' }}</button>
+        </div> 
+      </div>
       <span
         #iconHelp 
         class="material-symbols-outlined ms-1 me-1 p-1 font-size-md-34 cursor-pointer"
@@ -154,7 +161,8 @@
                   (click)="toggleSelection(item)"
                   [ngClass]="[
                               selectedWords.length == 4 ? '' : 'cursor-pointer',
-                              selectedWords.includes(item) && mistakesRemaining.length ? 'selectedWordTile cursor-pointer' : ''
+                              selectedWords.includes(item) && mistakesRemaining.length ? 'selectedWordTile cursor-pointer' : '',
+                              showHint ? getHintClass(item) : ''
                               ]">
                   <span 
                     class="open-sans-header" 

@@ -74,6 +74,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   isShuffling: boolean = false;
   alertTimeout: any = undefined;
   doNotShowHelpAgain: boolean | null = null;
+  showHint: boolean = false;
+  yellowHint: number | null = null;
+  greenHint: number | null = null;
+  blueHint: number | null = null;
+  purpleHint: number | null = null;
   
   constructor(public _apiService: ApiService, private shepherdService: ShepherdService) {
     this.fetchTodayDate();
@@ -191,6 +196,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           this.blue = this.apiResponse['value']['blue'];
           this.purple = this.apiResponse['value']['purple'];
           this.message =  this.apiResponse['value']['greetingMessage'] || "Create four groups of four!";
+          this.yellowHint = this.apiResponse['value']?.['hints']?.['yellow'] ?? this.yellow['answers'][Math.floor(Math.random() * this.yellow['answers'].length)];
+          this.greenHint = this.apiResponse['value']?.['hints']?.['green'] ?? this.green['answers'][Math.floor(Math.random() * this.green['answers'].length)];
+          this.blueHint = this.apiResponse['value']?.['hints']?.['blue'] ?? this.blue['answers'][Math.floor(Math.random() * this.blue['answers'].length)];
+          this.purpleHint = this.apiResponse['value']?.['hints']?.['purple'] ?? this.purple['answers'][Math.floor(Math.random() * this.purple['answers'].length)];
+
         } catch(err) {
 
         }
@@ -678,8 +688,16 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.storeData();
   }
 
-  revealHint() {
+  toggleHint() {
+    this.showHint = !this.showHint;
+  }
 
+  getHintClass(item: any): string {
+    if (item === this.yellowHint) return 'yellow-overlay';
+    if (item === this.greenHint) return 'green-overlay';
+    if (item === this.blueHint) return 'blue-overlay';
+    if (item === this.purpleHint) return 'purple-overlay';
+    return '';
   }
 
   modifyShareMessage(guess: Array<String>) {

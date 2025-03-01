@@ -49,6 +49,22 @@
     background-color: $purple;
 }
 
+.yellow-overlay {
+    background-color: rgba($yellow, 0.75);
+}
+
+.green-overlay {
+    background-color: rgba($green, 0.75);
+}
+  
+.blue-overlay {
+    background-color: rgba($blue, 0.75);
+}
+  
+.purple-overlay {
+    background-color: rgba($purple, 0.75);
+}
+
 .selectedWordTile {
     background-color: $selectedTileBackground;
     color: white;
@@ -329,5 +345,7 @@
     animation: fadeFill 0.5s ease forwards;
   }
 
-  
+.hintRevealed {
+    color: $yellow;
+}
   
