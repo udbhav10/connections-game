@@ -2,7 +2,7 @@ export const tourSteps: any =
     [
         {
             id: 'hints',
-            text: 'Click here for hints (Coming Soon!)',
+            text: 'Click here for hints',
             title: 'Hints',
             attachTo: {
               element: '#iconBulb',

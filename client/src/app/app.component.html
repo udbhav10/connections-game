@@ -28,7 +28,7 @@
       </ng-template>
     </div>
     <div class="icons-group d-flex ms-auto align-items-center">
-      <div class="d-flex" ngbDropdown>        
+      <div class="d-flex position-relative" ngbDropdown>        
         <span
           #iconBulb
           id="iconBulb"
@@ -44,6 +44,12 @@
         >
           lightbulb
         </span>
+        <div 
+          class="new-badge font-size-md-12 open-sans-header position-absolute"
+          [ngStyle]="(isTablet || isMobile) ? { top: '-4px', right: '-5px' } : { top: '-8px', right: '-10px' }"
+        >
+            NEW!
+        </div>
         <div ngbDropdownMenu aria-labelledby="iconBulb">
           <button ngbDropdownItem (click)="toggleHint()">{{ showHint ? 'Hide Hint' : 'Reveal Hint' }}</button>
         </div> 
