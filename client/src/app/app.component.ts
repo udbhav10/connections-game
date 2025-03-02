@@ -690,6 +690,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   toggleHint() {
     this.showHint = !this.showHint;
+    if (this.showHint) {
+      this.selectedWords = []; 
+    }
   }
 
   getHintClass(item: any): string {

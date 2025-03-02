@@ -72,7 +72,7 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, 'client/dist/client/browser')));
+app.use(express.static(path.join(__dirname, 'production/connections/client/browser')));
 
 app.use(session({
   store: new PGStore({
