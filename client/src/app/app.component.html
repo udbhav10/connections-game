@@ -34,7 +34,7 @@
           id="iconBulb"
           data-no-icon="true"
           class="material-symbols-outlined me-1 p-1 font-size-md-34 cursor-pointer"
-          [ngClass]="showHint ? 'hintRevealed' : ''" 
+          [ngClass]="showHint && !isGameOver ? 'hintRevealed' : ''" 
           (touchstart)="setActiveTouch(iconBulb)"
           (mouseenter)="setActiveMouse(iconBulb)"
           (mouseleave)="removeActiveMouse(iconBulb)"
@@ -51,7 +51,7 @@
             NEW!
         </div>
         <div ngbDropdownMenu aria-labelledby="iconBulb">
-          <button ngbDropdownItem (click)="toggleHint()">{{ showHint ? 'Hide Hint' : 'Reveal Hint' }}</button>
+          <button ngbDropdownItem [disabled]="isGameOver" (click)="toggleHint()">{{ showHint && !isGameOver ? 'Hide Hint' : 'Reveal Hint' }}</button>
         </div> 
       </div>
       <span

@@ -693,7 +693,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   toggleHint() {
     this.showHint = !this.showHint;
     if (this.showHint) {
-      this.selectedWords = []; 
+      this.selectedWords = [];
+      if (!this.shareMessage.includes("Hint Taken")) {
+        this.shareMessage = this.shareMessage.replace(this.istDate, this.istDate + " (Hint Taken)");
+        this.storeData();
+      }      
     }
   }
 
@@ -775,7 +779,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       guessesMade: this.guessesMade,
       shareMessage: this.shareMessage,
       message: this.message,
-      order: this.order
+      order: this.order,
+      showHint: this.showHint
     };
     const attempts = this.attempts;
     const resultFlag = this.resultFlag;
@@ -834,6 +839,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         this.mistakesRemaining = progressData.mistakesRemaining;
         this.order = progressData.order;
         this.shareMessage = progressData.shareMessage;
+        this.showHint = progressData?.showHint ?? this.showHint;
 
         this.getLayoverContent();
 
@@ -861,6 +867,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           this.mistakesRemaining = res.progressData.mistakesRemaining;
           this.order = res.progressData.order;
           this.shareMessage = res.progressData.shareMessage;
+          this.showHint = res.progressData?.showHint ?? this.showHint;
         } else {
           if(sessionData) {
             this.getSessionData(sessionData);
