@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Event, RouterOutlet } from '@angular/router';
@@ -79,6 +79,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   greenHint: number | null = null;
   blueHint: number | null = null;
   purpleHint: number | null = null;
+  @ViewChild(LayoverComponent) layoverComponent!: LayoverComponent;
   
   constructor(public _apiService: ApiService, private shepherdService: ShepherdService) {
     this.fetchTodayDate();
@@ -957,6 +958,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.buttonText = 'Admire Puzzle';
     }
     this.greetingMessage += loginPrompt;
+    if (this.isGameOver) {
+      this.layoverComponent?.startCountdown();
+    }
   }
 
   openStats() {
