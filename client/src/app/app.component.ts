@@ -36,8 +36,7 @@ import { tourSteps, defaultStepOptions, loginStep, accountStep } from './models/
   ]
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
-  date: string = '';
-  istDate: string = this.getISTDate();
+  istDate: string = '';
   message: string = '';
   isMobile: boolean = false;
   isTablet: boolean = false;
@@ -111,8 +110,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       month: 'long', 
       day: 'numeric' 
     };
-    this.date = new Date().toLocaleDateString('en-US', options);
-    this.shareMessage = "Connections\n" + this.date + "\n";
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istNow = new Date(new Date().getTime() + istOffset);
+    this.istDate = istNow.toLocaleDateString('en-US', options);
+    this.shareMessage = "Connections\n" + this.istDate + "\n";
   }
 
   detectDevice() {
@@ -1007,13 +1008,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       tourSteps.push(loginStep);
     }
     this.shepherdService.addSteps(tourSteps);
-  }
-
-  private getISTDate(): string {
-    const now = new Date();
-    const istOffset = 5.5 * 60 * 60 * 1000;
-    const istNow = new Date(now.getTime() + istOffset);
-    return istNow.toISOString().split('T')[0];
   }
   
   ngOnDestroy(): void { }

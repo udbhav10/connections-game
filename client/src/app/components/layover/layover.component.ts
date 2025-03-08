@@ -10,7 +10,7 @@ import { ApiService } from '../../services/api.service';
   styleUrl: './layover.component.scss'
 })
 export class LayoverComponent implements OnInit {
-  @Input() date: string = '';
+  @Input() istDate: string = '';
   @Input() isMobile: boolean = false;
   @Input() isLoggedIn: boolean = false;
   @Input() isGameOver: boolean = false;

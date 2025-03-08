@@ -21,7 +21,7 @@
     <div id="game-title">
       <ng-container *ngIf="!isMobile; else logo">
         <span class="roboto-serif-header font-size-md-32 me-sm-3 me-1">Connections</span>
-        <span class="roboto-serif-body font-size-md-24">{{ date }}</span>
+        <span class="roboto-serif-body font-size-md-24">{{ istDate }}</span>
       </ng-container>
       <ng-template #logo>
         <img src="images/connection.png" height="26px">
@@ -234,7 +234,7 @@
   <ng-container *ngIf="showLayover">
 
     <app-layover
-      [date]="date"
+      [istDate]="istDate"
       [isMobile]="isMobile"
       [isLoggedIn]="isLoggedIn"
       [isGameOver]="isGameOver"
