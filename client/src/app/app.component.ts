@@ -37,6 +37,7 @@ import { tourSteps, defaultStepOptions, loginStep, accountStep } from './models/
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   date: string = '';
+  istDate: string = this.getISTDate();
   message: string = '';
   isMobile: boolean = false;
   isTablet: boolean = false;
@@ -777,13 +778,18 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     const attempts = this.attempts;
     const resultFlag = this.resultFlag;
-    const todayDate = this.date;
+
+    const now = new Date();
+    
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istNow = new Date(now.getTime() + istOffset);
+    
+    const todayDate = this.istDate;
 
     const sessionData = { progressData, attempts, resultFlag, todayDate };
     const cookieValue = encodeURIComponent(JSON.stringify(sessionData));
 
-    const now = new Date();
-    const expireTime = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    const expireTime = new Date(istNow.getTime() + 24 * 60 * 60 * 1000);
 
     document.cookie = `gameProgress=${cookieValue}; path=/; expires=${expireTime.toUTCString()};`;
 
@@ -811,7 +817,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       try {
         const { progressData, attempts, resultFlag, todayDate } = JSON.parse(sessionData);
 
-        if (todayDate !== this.date) {
+        if (todayDate !== this.istDate) {
 
           document.cookie = "gameProgress=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           // console.log('Cookie destroyed as the date does not match.');
@@ -1001,6 +1007,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       tourSteps.push(loginStep);
     }
     this.shepherdService.addSteps(tourSteps);
+  }
+
+  private getISTDate(): string {
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istNow = new Date(now.getTime() + istOffset);
+    return istNow.toISOString().split('T')[0];
   }
   
   ngOnDestroy(): void { }
