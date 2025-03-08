@@ -108,11 +108,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     const options: Intl.DateTimeFormatOptions = { 
       year: 'numeric', 
       month: 'long', 
-      day: 'numeric' 
+      day: 'numeric',
+      timeZone: 'Asia/Kolkata' 
     };
-    const istOffset = 5.5 * 60 * 60 * 1000;
-    const istNow = new Date(new Date().getTime() + istOffset);
-    this.istDate = istNow.toLocaleDateString('en-US', options);
+    this.istDate = new Date().toLocaleDateString('en-US', options);
     this.shareMessage = "Connections\n" + this.istDate + "\n";
   }
 
