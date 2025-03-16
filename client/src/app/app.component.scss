@@ -68,6 +68,9 @@
             .dropdown-item:active {
                 background-color: var(--dropdownItemActiveBackground);
             }
+            .dropdown-item:disabled {
+                color: var(--primaryButtonBackgroundActive);
+            }
         }
     }
 
@@ -122,7 +125,7 @@
                 .sheen {
                     width: 50px !important;
                     z-index: 5;
-                    background-color: #ffffff40;
+                    background-color: var(--sheenColor);
                 }
 
                 // Word Tiles
@@ -145,7 +148,7 @@
                 }
                 .selectedWordTile {
                     background-color: var(--selectedTileBackground);
-                    color: white;
+                    color: var(--primaryButtonColor);
                 }
                 .font-variation-width-85 {
                     font-variation-settings: "wdth" 85;

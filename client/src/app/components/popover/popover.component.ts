@@ -18,6 +18,7 @@ export class PopoverComponent implements OnInit {
   @Input('popoverType') popoverType: string = 'stats';
   @Input('mistakesDistri') mistakesDistri: any = {};
   @Input() doNotShowHelpAgain: boolean = false;
+  @Input() darkMode: boolean = false;
   mistakesStats: any = {
     "wins": 0,
     "losses": 0,
@@ -100,7 +101,9 @@ export class PopoverComponent implements OnInit {
       type: 'bar',
       data: [this.mistakesStats['mistakes_0'], this.mistakesStats['mistakes_1'], this.mistakesStats['mistakes_2'], this.mistakesStats['mistakes_3'], this.mistakesStats['mistakes_4']],
       pointWidth: 30,
-    }]
+    }];
+
+    this.applyHighchartsTheme();
   }
 
   closePopover() {
@@ -118,5 +121,27 @@ export class PopoverComponent implements OnInit {
       doNotShowHelpAgain: this.doNotShowHelpAgain,
       startTour: true
     });
+  }
+
+  applyHighchartsTheme() {
+    this.chartOptions.chart!.backgroundColor = this.darkMode ? '#121212' : '#FFFFFF';
+    this.chartOptions.title!.style = { color: this.darkMode ? '#FFFFFF' : '#000000' };
+  
+    const xAxis = this.chartOptions.xAxis as Highcharts.XAxisOptions;
+    if (xAxis.labels) {
+      xAxis.labels.style = { color: this.darkMode ? '#FFFFFF' : '#000000' };
+    }
+  
+    this.chartOptions.yAxis = {
+      ...this.chartOptions.yAxis,
+      gridLineColor: this.darkMode ? '#444444' : '#DDDDDD',
+    };
+  
+    this.chartOptions.plotOptions!.series!.color = this.darkMode ? '#8A7FFF' : '#b3a7fe';
+  
+    const dataLabels = this.chartOptions.plotOptions!.series!.dataLabels as Highcharts.PlotSeriesDataLabelsOptions;
+    if (dataLabels) {
+      dataLabels.style = { color: this.darkMode ? '#FFFFFF' : '#000000' };
+    }
   }
 }

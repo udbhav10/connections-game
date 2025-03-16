@@ -247,7 +247,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
               if (configObj) {
                 this.doNotShowHelpAgain = configObj.doNotShowHelpAgain ?? false;
                 const darkMode = configObj.darkMode ?? false;
-                if (darkMode) {
+                if (darkMode && !this.themeService.darkMode) {
                   this.themeService.toggleTheme();
                 }
               }
@@ -924,7 +924,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       next: (res: any) => {
         this.doNotShowHelpAgain = res['configuration']['doNotShowHelpAgain'] ?? false;
         const darkMode = res['configuration']['darkMode'] ?? false;
-        if (darkMode) {
+        if (darkMode && !this.themeService.darkMode) {
           this.themeService.toggleTheme();
         }
       },

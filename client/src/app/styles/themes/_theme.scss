@@ -23,6 +23,7 @@
     --primaryButtonColor: #{$primaryButtonColor};
     --dropdownItemHoverBackground: #{$dropdownItemHoverBackground};
     --dropdownItemActiveBackground: #{$dropdownItemActiveBackground};
+    --sheenColor: #{$sheenColor};
 }
 
 .dark-theme {
@@ -51,4 +52,5 @@
     --dropdownItemHoverBackground: #{$dropdownItemHoverBackground};
     --dropdownItemActiveBackground: #{$dropdownItemActiveBackground};
     --bs-box-shadow: #{$bs-box-shadow};
+    --sheenColor: #{$sheenColor};
 }
