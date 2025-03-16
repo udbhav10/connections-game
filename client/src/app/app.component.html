@@ -44,12 +44,6 @@
         >
           lightbulb
         </span>
-        <div 
-          class="new-badge font-size-md-12 open-sans-header position-absolute"
-          [ngStyle]="(isTablet || isMobile) ? { top: '-4px', right: '-5px' } : { top: '-8px', right: '-10px' }"
-        >
-            NEW!
-        </div>
         <div ngbDropdownMenu aria-labelledby="iconBulb">
           <button ngbDropdownItem [disabled]="isGameOver" (click)="toggleHint()">{{ showHint && !isGameOver ? 'Hide Hint' : 'Reveal Hint' }}</button>
         </div> 
@@ -66,18 +60,38 @@
       >
         help
       </span>
-      <span
-        #iconSettings
-        id="iconSettings" 
-        class="material-symbols-outlined ms-1 me-1 p-1 font-size-md-34 cursor-pointer"
-        (touchstart)="setActiveTouch(iconSettings)"
-        (mouseenter)="setActiveMouse(iconSettings)"
-        (mouseleave)="removeActiveMouse(iconSettings)"
-        (touchend)="removeActiveTouch(iconSettings)"
-        (touchcancel)="removeActiveTouch(iconSettings)"
-      >
-        settings
-      </span>
+      <div class="d-flex position-relative" ngbDropdown>
+        <span
+          #iconSettings
+          id="iconSettings"
+          data-no-icon="true" 
+          class="material-symbols-outlined ms-1 me-1 p-1 font-size-md-34 cursor-pointer"
+          (touchstart)="setActiveTouch(iconSettings)"
+          (mouseenter)="setActiveMouse(iconSettings)"
+          (mouseleave)="removeActiveMouse(iconSettings)"
+          (touchend)="removeActiveTouch(iconSettings)"
+          (touchcancel)="removeActiveTouch(iconSettings)"
+          ngbDropdownToggle
+        >
+          settings
+        </span>
+        <div 
+          class="new-badge font-size-md-12 open-sans-header position-absolute"
+          [ngStyle]="(isTablet || isMobile) ? { top: '-4px', right: '-5px' } : { top: '-8px', right: '-10px' }"
+        >
+          NEW!
+        </div>
+        <div ngbDropdownMenu aria-labelledby="iconSettings">
+          <button ngbDropdownItem (click)="toggleTheme()" class="d-flex align-items-center">
+            <span class="material-symbols-outlined me-2">
+              {{ themeService.darkMode ? 'light_mode' : 'dark_mode' }}
+            </span>
+            <span>
+              {{ themeService.darkMode ? 'Light Mode' : 'Dark Mode' }}
+            </span>
+          </button>
+        </div> 
+      </div>
       <ng-container *ngIf="isLoggedIn; else login">
         <div class="d-flex" ngbDropdown>
           <span
@@ -101,7 +115,7 @@
         </div>
       </ng-container>
       <ng-template #login>
-        <a class="d-flex text-decoration-none" style="color: black;" [href]="_apiService.baseUrl + 'login/federated/google'">
+        <a class="d-flex text-decoration-none" [href]="_apiService.baseUrl + 'login/federated/google'">
           <span
             #iconLogin 
             id="iconLogin"
@@ -165,11 +179,8 @@
                   [id]="'word' + item" 
                   class="col d-flex justify-content-center align-items-center text-center wordTile m-1 px-1 dynamic-height"
                   (click)="toggleSelection(item)"
-                  [ngClass]="[
-                              selectedWords.length == 4 ? '' : 'cursor-pointer',
-                              selectedWords.includes(item) && mistakesRemaining.length ? 'selectedWordTile cursor-pointer' : '',
-                              showHint ? getHintClass(item) : ''
-                              ]">
+                  [ngClass]="getWordClasses(item)"
+                >
                   <span 
                     class="open-sans-header" 
                     [ngClass]="adjustFontSizeAndWidth(words[item])">

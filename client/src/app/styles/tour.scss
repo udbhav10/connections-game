@@ -1,14 +1,16 @@
+@import "themes/theme";
+
 .shepherd-button-secondary {
-    background-color: white !important;
-    color: #212529 !important;
-    border: 1px solid #212529 !important;
+    background-color: var(--primaryButtonColor) !important;
+    color: var(--primaryButtonBackground) !important;
+    border: 1px solid var(--primaryButtonBackground) !important;
     width: 85px;
 }
 
 .shepherd-button-primary {
-    background-color: #212529 !important;
-    color: white !important;
-    border: 1px solid #212529 !important;
+    background-color: var(--primaryButtonBackground) !important;
+    color: var(--primaryButtonColor) !important;
+    border: 1px solid var(--primaryButtonBackground) !important;
     width: 85px;
 }
 
@@ -18,6 +20,20 @@
 
 .shepherd-header {
     padding: 0.25rem 0.75rem !important;
+}
+
+.dark-theme .shepherd-header {
+    background-color: var(--dropdownItemHoverBackground) !important;
+    .shepherd-title {
+        color: var(--color) !important;
+    }
+}
+
+.dark-theme .shepherd-content {
+    background-color: var(--background) !important;
+    .shepherd-text {
+        color: var(--color) !important;
+    }
 }
 
 .shepherd-cancel-icon {

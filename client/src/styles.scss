@@ -1,13 +1,5 @@
 @import "app/styles/tour.scss";
-
-$yellow: #f9df6d;
-$green: #a0c35a;
-$blue: #b0c4ef;
-$purple: #ba81c5;
-$tileBackground: #efefe6;
-$selectedTileBackground: #5a594e;
-$wrongGuessTileBackground: #aeaea3;
-$layoverBackground: #b3a7fe;
+@import "app/styles/themes/theme";
 
 @mixin roboto-serif($uniquifier, $weight) {
 

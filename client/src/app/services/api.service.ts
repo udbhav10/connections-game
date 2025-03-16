@@ -55,10 +55,11 @@ export class ApiService {
     );
   }
 
-  saveUserConfiguration(doNotShowHelpAgain: boolean) {
+  saveUserConfiguration(doNotShowHelpAgain: boolean, darkMode: boolean) {
     const inputParams = {
       configuration: {
-        "doNotShowHelpAgain": doNotShowHelpAgain
+        "doNotShowHelpAgain": doNotShowHelpAgain,
+        "darkMode": darkMode
       },
     };
     return this.http.post(`${this.baseUrl}save-configuration`, inputParams, {

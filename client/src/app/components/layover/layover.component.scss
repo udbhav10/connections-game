@@ -10,7 +10,7 @@
 
 .layover {
     min-height: fit-content;
-    background-color: $layoverBackground;
+    background-color: var(--layoverBackground);
     .connections-img {
         height: 150px;
         @media (max-width: 768px) {
@@ -21,14 +21,14 @@
         border-radius: 25px;
         width: 70%;
         max-width: 200px;
-        color: #fff;
-        border: 1px solid #212529;
-        background-color: #212529;
+        color: var(--primaryButtonColor);
+        border: 1px solid var(--primaryButtonBackground);
+        background-color: var(--primaryButtonBackground);
     }
     
     .play-button:active {
-        color: #fff;
-        background-color: #2125297e;   
+        color: var(--primaryButtonColor);
+        background-color: var(--primaryButtonBackgroundActive);   
     }
 
     .login-button-div {
@@ -38,14 +38,14 @@
             .login-button {
                 width: 100%;
                 border-radius: 25px;
-                color: #212529;
-                border: 1px solid #212529;
+                color: var(--primaryButtonBackground);
+                border: 1px solid var(--primaryButtonBackground);
                 background-color: transparent;
             }
             
             .login-button:active {
-                color: #fff;
-                background-color: #2125297e;   
+                color: var(--primaryButtonColor);
+                background-color: var(--primaryButtonBackgroundActive); 
             }
         }
     }

@@ -9,11 +9,12 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { ShepherdService } from 'angular-shepherd';
 import { tourSteps, defaultStepOptions, loginStep, accountStep } from './models/tour-data';
+import { ThemeService } from './services/theme.service';
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, CommonModule, HttpClientModule, LayoverComponent, PopoverComponent, NgbDropdownModule],
-  providers: [ApiService],
+  providers: [ApiService, ThemeService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   animations: [
@@ -81,7 +82,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   purpleHint: number | null = null;
   @ViewChild(LayoverComponent) layoverComponent!: LayoverComponent;
   
-  constructor(public _apiService: ApiService, private shepherdService: ShepherdService) {
+  constructor(public _apiService: ApiService, private shepherdService: ShepherdService, public themeService: ThemeService) {
     this.fetchTodayDate();
     this.fetchConnections();
     this.detectDevice();
@@ -243,8 +244,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           if (configuration) {
             try {
               const configObj = JSON.parse(configuration);
-              if (configObj && configObj.doNotShowHelpAgain !== undefined) {
-                this.doNotShowHelpAgain = configObj.doNotShowHelpAgain;
+              if (configObj) {
+                this.doNotShowHelpAgain = configObj.doNotShowHelpAgain ?? false;
+                const darkMode = configObj.darkMode ?? false;
+                if (darkMode) {
+                  this.themeService.toggleTheme();
+                }
               }
             } catch (err) {
               console.error('Error parsing configuration cookie:', err);
@@ -696,11 +701,19 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedWords = [];
       if (!this.shareMessage.includes("Hint Taken")) {
         this.shareMessage = this.shareMessage.replace(this.istDate, this.istDate + " (Hint Taken)");
-        this.storeData();
       }      
     }
+    this.storeData();
   }
 
+  getWordClasses(item: number) {
+    return {
+      'cursor-pointer': this.selectedWords.length !== 4 || (this.selectedWords.includes(item) && this.mistakesRemaining.length),
+      'selectedWordTile': this.selectedWords.includes(item) && this.mistakesRemaining.length,
+      [this.getHintClass(item)]: this.showHint && !!this.getHintClass(item)
+    };
+  }
+  
   getHintClass(item: any): string {
     if (item === this.yellowHint) return 'yellow-overlay';
     if (item === this.greenHint) return 'green-overlay';
@@ -909,8 +922,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   getConfiguration() {
     this._apiService.getUserConfiguration().subscribe({
       next: (res: any) => {
-        if(res['configuration']['doNotShowHelpAgain']) {
-          this.doNotShowHelpAgain = res['configuration']['doNotShowHelpAgain'];
+        this.doNotShowHelpAgain = res['configuration']['doNotShowHelpAgain'] ?? false;
+        const darkMode = res['configuration']['darkMode'] ?? false;
+        if (darkMode) {
+          this.themeService.toggleTheme();
         }
       },
       error: (error) => {
@@ -925,7 +940,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   saveConfiguration() {
     if(this.isLoggedIn) {
       
-      this._apiService.saveUserConfiguration(this.doNotShowHelpAgain ?? false).subscribe({
+      this._apiService.saveUserConfiguration(this.doNotShowHelpAgain ?? false, this.themeService.darkMode).subscribe({
         next: (response) => {
           console.log('User config saved:', response);
         },
@@ -937,6 +952,14 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }); 
 
+    } else {
+      const configuration = {
+        "doNotShowHelpAgain": this.doNotShowHelpAgain ?? false,
+        "darkMode": this.themeService.darkMode
+      };
+      const expiryDate = new Date();
+      expiryDate.setMonth(expiryDate.getMonth() + 1);
+      document.cookie = `configuration=${JSON.stringify(configuration)}; path=/; expires=${expiryDate.toUTCString()};`;
     }
   }
 
@@ -993,16 +1016,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     if(event.hasOwnProperty('doNotShowHelpAgain')) {
       if(this.doNotShowHelpAgain !== event['doNotShowHelpAgain']) {
         this.doNotShowHelpAgain = event['doNotShowHelpAgain'];
-        if(this.isLoggedIn) {
-          this.saveConfiguration();
-        } else {
-          const configuration = {
-            "doNotShowHelpAgain": this.doNotShowHelpAgain
-          };
-          const expiryDate = new Date();
-          expiryDate.setMonth(expiryDate.getMonth() + 1);
-          document.cookie = `configuration=${JSON.stringify(configuration)}; path=/; expires=${expiryDate.toUTCString()};`;
-        }
+        this.saveConfiguration();
       }
     }
     if(event.hasOwnProperty('startTour')) {
@@ -1018,6 +1032,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       tourSteps.push(loginStep);
     }
     this.shepherdService.addSteps(tourSteps);
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
+    this.saveConfiguration();
   }
   
   ngOnDestroy(): void { }

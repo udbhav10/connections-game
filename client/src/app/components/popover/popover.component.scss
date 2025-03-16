@@ -2,21 +2,22 @@
 @import "../../app.component.scss";
 
 .popover {
-    background-color: white;
+    background-color: var(--background);
+    border: 1px solid var(--selectedTileBackground);
     width: 100%;
     max-width: 650px;
     max-height: 80%;
 }
 
 .popover-button {
-    background-color: white;
-    color: #212529;
-    border: 1px solid #212529;
+    background-color: var(--primaryButtonColor);
+    color: var(--primaryButtonBackground);
+    border: 1px solid var(--primaryButtonBackground);
     border-radius: 8px;
 }
 .popover-button:hover {
-    background-color: #212529;
-    color: white;
+    background-color: var(--primaryButtonBackground);
+    color: var(--primaryButtonColor);
 }
 .popover-button:active {
     box-shadow: var(--bs-box-shadow) !important;

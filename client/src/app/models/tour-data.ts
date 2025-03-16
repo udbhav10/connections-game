@@ -19,7 +19,7 @@ export const tourSteps: any =
         },
         {
             id: 'settings',
-            text: 'Click here for settings (Coming Soon!)',
+            text: 'Click here for settings (New - Dark Mode!)',
             title: 'Settings',
             attachTo: {
               element: '#iconSettings',

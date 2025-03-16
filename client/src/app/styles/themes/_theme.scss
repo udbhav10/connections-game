@@ -1,0 +1,54 @@
+@import "theme-light"; // Default theme
+
+:root {
+    --color: #{$color};
+    --background: #{$background};
+    --yellow: #{$yellow};
+    --green: #{$green};
+    --blue: #{$blue};
+    --purple: #{$purple};
+    --yellowOverlay: #{$yellowOverlay};
+    --greenOverlay: #{$greenOverlay};
+    --blueOverlay: #{$blueOverlay};
+    --purpleOverlay: #{$purpleOverlay};
+    --tileBackground: #{$tileBackground};
+    --selectedTileBackground: #{$selectedTileBackground};
+    --wrongGuessTileBackground: #{$wrongGuessTileBackground};
+    --layoverBackground: #{$layoverBackground};
+    --alertBackground: #{$alertBackground};
+    --alertColor: #{$alertColor};
+    --iconsHoverBackground: #{$iconsHoverBackground};
+    --primaryButtonBackground: #{$primaryButtonBackground};
+    --primaryButtonBackgroundActive: #{$primaryButtonBackgroundActive};
+    --primaryButtonColor: #{$primaryButtonColor};
+    --dropdownItemHoverBackground: #{$dropdownItemHoverBackground};
+    --dropdownItemActiveBackground: #{$dropdownItemActiveBackground};
+}
+
+.dark-theme {
+    @import "theme-dark";
+
+    --color: #{$color};
+    --background: #{$background};
+    --yellow: #{$yellow};
+    --green: #{$green};
+    --blue: #{$blue};
+    --purple: #{$purple};
+    --yellowOverlay: #{$yellowOverlay};
+    --greenOverlay: #{$greenOverlay};
+    --blueOverlay: #{$blueOverlay};
+    --purpleOverlay: #{$purpleOverlay};
+    --tileBackground: #{$tileBackground};
+    --selectedTileBackground: #{$selectedTileBackground};
+    --wrongGuessTileBackground: #{$wrongGuessTileBackground};
+    --layoverBackground: #{$layoverBackground};
+    --alertBackground: #{$alertBackground};
+    --alertColor: #{$alertColor};
+    --iconsHoverBackground: #{$iconsHoverBackground};
+    --primaryButtonBackground: #{$primaryButtonBackground};
+    --primaryButtonBackgroundActive: #{$primaryButtonBackgroundActive};
+    --primaryButtonColor: #{$primaryButtonColor};
+    --dropdownItemHoverBackground: #{$dropdownItemHoverBackground};
+    --dropdownItemActiveBackground: #{$dropdownItemActiveBackground};
+    --bs-box-shadow: #{$bs-box-shadow};
+}

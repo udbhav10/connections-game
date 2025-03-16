@@ -6,173 +6,232 @@
 @include open-sans("bold", 500);
 @include open-sans("body", 400);
 
-.active-mouse {
-    text-decoration: underline;
-}
-
-.active-touch {
-    background-color: rgba(178, 167, 254, 0.25);
-}
-
 .main-container {
     height: 100vh;
-}
+    color: var(--color);
+    background-color: var(--background);
 
-.game-grid {
-    width: 100%;
-    max-width: 650px;
-}
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(8px);
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .app-popover {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 3;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.wordTile {
-    background-color: $tileBackground;
-    border-radius: 10px;
-    transition: background-color 0.3s ease;
-}
+    // navbar
+    #navbar {
+        .icons-group {
+            .material-symbols-outlined {
+                color: var(--color);
+                a {
+                    color: var(--color);
+                }
+            }
+            .active-mouse {
+                text-decoration: underline;
+            }
+            .active-touch {
+                background-color: var(--iconsHoverBackground);
+            }
+            .hintRevealed {
+                color: var(--yellow);
+            }
+        }
+        .dropdown-menu {
+            background-color: var(--background);
+            border: 1px solid var(--color);
+            .dropdown-item {
+                color: var(--color);
+            }
+            .dropdown-item:hover {
+                background-color: var(--dropdownItemHoverBackground);
+            }
+            .dropdown-item:active {
+                background-color: var(--dropdownItemActiveBackground);
+            }
+        }
+    }
 
-.revealedGroup {
-    border-radius: 10px;
-}
+    // content
+    #content-container {
+        #message {
+            .alert {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: var(--alertBackground);
+                color: var(--alertColor);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                opacity: 0;
+                animation: fadeInOut 2.5s ease-in-out forwards;
+            }
+        }
 
-.yellow {
-    background-color: $yellow;
-}
+        #game {
+            .game-grid {
+                width: 100%;
+                max-width: 650px;
 
-.green {
-    background-color: $green;
-}
+                // Groups Found
+                .revealedGroup {
+                    border-radius: 10px;
+                    color: black;
+                }
+                .yellow {
+                    background-color: var(--yellow);
+                }
+                .green {
+                    background-color: var(--green);
+                }
+                .blue {
+                    background-color: var(--blue);
+                }   
+                .purple {
+                    background-color: var(--purple);
+                }
+                .dynamic-height {
+                    height: 15vh;
+                    min-height: 75px;
+                    max-height: 150px;
+                    @media (min-height: 600px) {
+                        max-height: 80px;
+                    }
+                }
+                .sheen {
+                    width: 50px !important;
+                    z-index: 5;
+                    background-color: #ffffff40;
+                }
 
-.blue {
-    background-color: $blue;
-}
+                // Word Tiles
+                .wordTile {
+                    background-color: var(--tileBackground);
+                    border-radius: 10px;
+                    transition: background-color 0.3s ease;
+                }
+                .yellow-overlay {
+                    background-color: var(--yellowOverlay);
+                }
+                .green-overlay {
+                    background-color: var(--greenOverlay);
+                }
+                .blue-overlay {
+                    background-color: var(--blueOverlay);
+                }
+                .purple-overlay {
+                    background-color: var(--purpleOverlay);
+                }
+                .selectedWordTile {
+                    background-color: var(--selectedTileBackground);
+                    color: white;
+                }
+                .font-variation-width-85 {
+                    font-variation-settings: "wdth" 85;
+                }                
+            }
+        }
 
-.purple {
-    background-color: $purple;
-}
+        #mistakes {
+            .mistake-circle-fill {
+                color: var(--selectedTileBackground);
+                font-variation-settings: 'FILL' 1;
+            }
+            
+            .mistake-circle {
+                color: var(--selectedTileBackground);
+            }
+        }
 
-.yellow-overlay {
-    background-color: rgba($yellow, 0.75);
-}
+        #buttons {
+            .game-buttons {
+                border-radius: 25px;
+                font-weight: 500;
+                color: var(--primaryButtonBackground);
+                border: 2px solid var(--primaryButtonBackground);
+                background-color: var(--primaryButtonColor);
+            }
+            
+            .submit-button {
+                border-radius: 25px;
+                font-weight: 500;
+                border: 2px solid var(--primaryButtonBackground);
+                color: var(--primaryButtonColor);
+                background-color: var(--primaryButtonBackground);
+            }
+            
+            .game-buttons:active {
+                color: var(--primaryButtonColor);
+                background-color: var(--primaryButtonBackground); 
+            }
+            
+            .submit-button:active {
+                color: var(--primaryButtonColor);
+                background-color: var(--primaryButtonBackgroundActive);
+            }
+            
+            .game-buttons:disabled {
+                opacity: 0.5;
+            }
+            
+            .submit-button:disabled {
+                opacity: 0.5;
+                color: var(--primaryButtonBackground);
+                background-color: var(--primaryButtonColor);
+            }
+            
+            .game-buttons:disabled:active {
+                color: var(--primaryButtonBackground);
+                background-color: var(--primaryButtonColor);
+            }
+        }
+    }
 
-.green-overlay {
-    background-color: rgba($green, 0.75);
-}
-  
-.blue-overlay {
-    background-color: rgba($blue, 0.75);
-}
-  
-.purple-overlay {
-    background-color: rgba($purple, 0.75);
-}
-
-.selectedWordTile {
-    background-color: $selectedTileBackground;
-    color: white;
-}
-
-.font-variation-width-85 {
-    font-variation-settings: "wdth" 85;
-}
-
-.mistake-circle-fill {
-    color: $selectedTileBackground;
-    font-variation-settings: 'FILL' 1;
-}
-
-.mistake-circle {
-    color: $selectedTileBackground;
-}
-
-.game-buttons {
-    border-radius: 25px;
-    font-weight: 500;
-    color: #212529;
-    border: 1px solid #212529;
-    background-color: #fff;
-}
-
-.submit-button {
-    border-radius: 25px;
-    font-weight: 500;
-    border: 1px solid #212529;
-    color: #fff;
-    background-color: rgba(33, 37, 41); 
-}
-
-.game-buttons:active {
-    color: #fff;
-    background-color: #212529;   
-}
-
-.submit-button:active {
-    color: #fff;
-    background-color: rgba(33, 37, 41, 0.75);
-}
-
-.game-buttons:disabled {
-    opacity: 0.5;
-}
-
-.submit-button:disabled {
-    opacity: 0.5;
-    color: #212529;
-    background-color: #fff;
-}
-
-.game-buttons:disabled:active {
-    color: #212529;
-    background-color: #fff;
+    #footer {
+        .icons-group {
+            font-size: 22px;
+            a {
+                text-decoration: none;
+                color: var(--color);;
+            }
+            i:hover {
+                animation: fa-bounce 1s;
+            }
+        }
+        @media (max-width: 768px) {
+            .icons-group {
+                font-size: 18px;
+                a {
+                    margin-top: 3px;
+                }
+            }   
+        }
+    }
 }
 
 .dropdown-toggle[data-no-icon="true"]::after {
     display: none;
-}
-
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(8px);
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.app-popover {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 3;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#footer {
-    .icons-group {
-        font-size: 22px;
-        a {
-            text-decoration: none;
-            color: black;
-        }
-        i:hover {
-            animation: fa-bounce 1s;
-        }
-    }
-    @media (max-width: 768px) {
-        .icons-group {
-            font-size: 18px;
-            a {
-                margin-top: 3px;
-            }
-        }   
-    }
 }
 
 .btn-md-lg {
@@ -202,21 +261,6 @@
     }
 }
 
-.dynamic-height {
-    height: 15vh;
-    min-height: 75px;
-    max-height: 150px;
-    @media (min-height: 600px) {
-        max-height: 80px;
-    }
-}
-
-.sheen {
-    width: 50px !important;
-    z-index: 5;
-    background-color: rgba(255, 255, 255, 0.25);
-}
-
 @keyframes bounce {
     0% {
       transform: translateY(0);
@@ -230,7 +274,7 @@
     100% {
       transform: translateY(0);
     }
-  }
+}
   
 .bounce {
     animation: bounce 0.45s ease;
@@ -262,9 +306,8 @@
 
 .shake {
     animation: shake 0.4s ease 2;
-    background-color: $wrongGuessTileBackground;
+    background-color: var(--wrongGuessTileBackground);
 }
-
 
 @keyframes slide {
     0% {
@@ -278,74 +321,56 @@
 .slide {
     animation: slide 0.65s ease forwards;
 }
-
-.alert {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(50, 50, 50);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    animation: fadeInOut 2.5s ease-in-out forwards;
-  }
   
-  @keyframes fadeInOut {
+@keyframes fadeInOut {
     0% {
-      opacity: 0;
+        opacity: 0;
     }
     10% {
-      opacity: 1;
+        opacity: 1;
     }
     90% {
-      opacity: 1;
+        opacity: 1;
     }
     100% {
-      opacity: 0;
+        opacity: 0;
     }
-  }
+}
 
-  @keyframes fadeOut {
+@keyframes fadeOut {
     0% { opacity: 1; }
     100% { opacity: 0; }
-  }
+}
 
-  @keyframes fadeIn {
+@keyframes fadeIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
-  }
+}
   
-  .fadeOut {
+.fadeOut {
     animation: fadeOut 0.2s ease forwards;
-  }
+}
 
-  .fadeIn {
+.fadeIn {
     animation: fadeIn 0.2s ease forwards;
-  }
+}
 
-  @keyframes growAndShrink {
+@keyframes growAndShrink {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
-  }
+}
 
-  .growAndShrink {
+.growAndShrink {
     animation: growAndShrink 0.5s ease;
-  }
+}
 
-  @keyframes fadeFill {
+@keyframes fadeFill {
     0% { font-variation-settings: 'FILL' 1; }
     100% { font-variation-settings: 'FILL' 0; }
-  }
+}
 
-  .fadeFill {
+.fadeFill {
     animation: fadeFill 0.5s ease forwards;
-  }
-
-.hintRevealed {
-    color: $yellow;
 }
   
