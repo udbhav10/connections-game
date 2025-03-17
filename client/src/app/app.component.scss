@@ -7,6 +7,7 @@
 @include open-sans("body", 400);
 
 .main-container {
+    min-height: 100vh;
     color: var(--color);
     background-color: var(--background);
 
